@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CodeMirror Example</title>
+  <style>
+
+    #editor {
+      border: 1px solid #444;
+      min-height: 300px;
+    }
+
+    /* Make the editor fill the box nicely */
+    .cm-editor {
+      height: 300px;
+      font-size: 16px;
+    }
+
+    .cm-scroller {
+      overflow: auto;
+      font-family: monospace;
+    }
+
+    /* Make the caret easier to see */
+    .cm-cursor {
+      border-left: 2px solid white !important;
+    }
+
+    /* Make current selection visible */
+    .cm-selectionBackground {
+      background-color: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    /* Optional: highlight active line */
+    .cm-activeLine {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Gutter styling */
+    .cm-gutters {
+      background: #181818;
+      color:black;
+      border-right: 1px solid #333;
+    }
+  </style>
+</head>
+<body>
+  <h2>Python Editor</h2>
+  <div id="editor"></div>
+
+  <script type="module">
+    import { EditorState } from "https://esm.sh/@codemirror/state";
+    import { EditorView, keymap, lineNumbers, highlightActiveLine, highlightActiveLineGutter } from "https://esm.sh/@codemirror/view";
+    import { defaultKeymap, history, historyKeymap } from "https://esm.sh/@codemirror/commands";
+    import { python } from "https://esm.sh/@codemirror/lang-python";
+    import { defaultHighlightStyle, syntaxHighlighting } from "https://esm.sh/@codemirror/language";
+    import { drawSelection } from "https://esm.sh/@codemirror/view";
+
+    const state = EditorState.create({
+      doc: `print("hello world")`,
+      extensions: [
+        lineNumbers(),
+        highlightActiveLineGutter(),
+        history(),
+        drawSelection(),
+        highlightActiveLine(),
+        keymap.of([...defaultKeymap, ...historyKeymap]),
+        python(),
+        syntaxHighlighting(defaultHighlightStyle)
+      ]
+    });
+
+    const view = new EditorView({
+      state,
+      parent: document.getElementById("editor")
+    });
+
+    window.editorView = view;
+  </script>
+</body>
+</html>

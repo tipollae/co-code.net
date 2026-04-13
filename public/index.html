@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coding coco</title>
+
+    <link rel="stylesheet" href="styling/style.css">
+    <link rel="stylesheet" href="styling/editor.css">
+
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    
+    <div id = "container">
+
+        <div id = "leftSide">
+            <div class = "otherTab"></div>
+        </div>
+
+        <div id = "middle">
+
+            <div id = "tabButtonsContainer">
+
+                <div class = "tabButton active" onclick = "switchTab('tab1')">Tab 1</div>
+                <div class = "tabButton" onclick = "switchTab('tab2')" style = "margin-left: 20px">Tab 2</div>
+
+            </div>
+
+            <div id = "editorContainer">
+
+                <div id="tab1" class = "editorTab active">
+
+                    <h1 id = "tab1Loading" class = "tabLoadingText">Loading...</h1>
+
+                </div>
+
+                <div id = "tab2" class = "editorTab">
+                    <h1 id = "tab2Loading" class = "tabLoadingText">Loading...</h1>
+                </div>
+
+            </div>
+            
+        </div>
+
+        <div id = "rightSide">
+            
+            <div id = "consoleButtonsContainer">
+
+                <div id = "runCode" onclick = "runCode()">Run ▶︎</div>
+
+            </div>
+
+            <div id = "consoleDisplayContainer">
+
+                <div id = "consoleDisplay">
+
+                    <p id = "consoleText">Loading Python Runtime...</p>
+
+                </div>
+
+            </div>
+
+            <div id = "chatContainer">
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        const buttons = document.querySelectorAll(".tabButton");
+
+        buttons.forEach(btn => {
+            btn.addEventListener("click", () => {
+
+                // remove active from all
+                buttons.forEach(b => b.classList.remove("active"));
+
+                // add to clicked one
+                btn.classList.add("active");
+            });
+        });
+
+    </script>
+
+    <script type = "text/javascript" src = "/socket.io/socket.io.js"></script>
+    <script type = "text/javascript" src = "scripts/script.js"></script>
+    <script type="module" src = "scripts/editor.js"></script>
+
+</body>
+</html>
