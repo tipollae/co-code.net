@@ -1,12 +1,25 @@
 import { EditorState } from "https://esm.sh/@codemirror/state";
-import { EditorView, keymap, lineNumbers, highlightActiveLine, highlightActiveLineGutter } from "https://esm.sh/@codemirror/view";
-import { defaultKeymap, history, historyKeymap } from "https://esm.sh/@codemirror/commands";
+import {
+  EditorView,
+  keymap,
+  lineNumbers,
+  highlightActiveLine,
+  highlightActiveLineGutter,
+  drawSelection
+} from "https://esm.sh/@codemirror/view";
+import {
+  defaultKeymap,
+  history,
+  historyKeymap,
+  indentWithTab
+} from "https://esm.sh/@codemirror/commands";
 import { python } from "https://esm.sh/@codemirror/lang-python";
-import { defaultHighlightStyle } from "https://esm.sh/@codemirror/language";
-import { drawSelection } from "https://esm.sh/@codemirror/view";
-import { insertTab, indentLess } from "https://esm.sh/@codemirror/commands";
-import { indentUnit } from "https://esm.sh/@codemirror/language";
-import { syntaxHighlighting, HighlightStyle } from "https://esm.sh/@codemirror/language";
+import {
+  defaultHighlightStyle,
+  syntaxHighlighting,
+  HighlightStyle,
+  indentUnit
+} from "https://esm.sh/@codemirror/language";
 import { tags } from "https://esm.sh/@lezer/highlight";
 
 const myTheme = HighlightStyle.define([
@@ -20,51 +33,46 @@ const myTheme = HighlightStyle.define([
     },
     {
         tag: tags.number,
-        color: "#21e6c1"
+        color: "#1cffd4"
     },
     {
         tag: tags.function(tags.variableName),
-        color: "#b0e4cc" // ← this will affect print()
+        color: "#58d58d"
     },
     { 
         tag: tags.variableName, 
-        color: "#b0e4cc" 
+        color: "#f7b538" 
     },
-    { tag: tags.paren, color: "#b0e4cc" },
+    { tag: tags.paren, color: "#58d58d" },
     { tag: tags.operator, color: "#f30a49" },
     { tag: tags.definitionOperator, color: "#ff5555" },
-    { tag: tags.punctuation, color: "#b0e4cc" },
+    { tag: tags.punctuation, color: "#58d58d" },
 ]);
 
 const state = EditorState.create({
     doc: `#people in the room can see what you code here
 print("hello world")`,
-    extensions: [
-        lineNumbers(),
-        highlightActiveLineGutter(),
-        history(),
-        drawSelection(),
-        highlightActiveLine(),
-        keymap.of([
-            ...defaultKeymap,
-            ...historyKeymap,
-            {
-                key: "Tab",
-                preventDefault: true,
-                run: insertTab
-            },
-            {
-                key: "Shift-Tab",
-                preventDefault: true,
-                run: indentLess
-            }
-        ]),
-        indentUnit.of("    "),
-        python(),
-        syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
-        syntaxHighlighting(myTheme)
-    ]
+  extensions: [
+    lineNumbers(),
+    highlightActiveLineGutter(),
+    history(),
+    drawSelection(),
+    highlightActiveLine(),
+
+    keymap.of([
+      indentWithTab,
+      ...defaultKeymap,
+      ...historyKeymap
+    ]),
+
+    indentUnit.of("    "),
+    python(),
+
+    syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+    syntaxHighlighting(myTheme)
+  ]
 });
+
 
 const state2 = EditorState.create({
     doc: `#woah, another code editor!
@@ -75,21 +83,16 @@ print('im feeling so gassy *farts cutely🎀*')`,
         history(),
         drawSelection(),
         highlightActiveLine(),
+
         keymap.of([
+            indentWithTab,
             ...defaultKeymap,
-            ...historyKeymap,
-            {
-                key: "Tab",
-                preventDefault: true,
-                run: insertTab
-            },
-            {
-                key: "Shift-Tab",
-                preventDefault: true,
-                run: indentLess
-            }
+            ...historyKeymap
         ]),
+
+        indentUnit.of("    "),
         python(),
+
         syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
         syntaxHighlighting(myTheme)
     ]

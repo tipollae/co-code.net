@@ -1,7 +1,8 @@
 let pyodide;
+let pendingInputResolve = null;
 
 self.onmessage = async (event) => {
-    const { type, code } = event.data;
+    const { type, code, inputValue } = event.data;
 
     if (type === "init") {
         importScripts("https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js");
@@ -20,11 +21,23 @@ self.onmessage = async (event) => {
             }
         });
 
+        pyodide.setStdin({
+            stdin: async () => {
+                self.postMessage({ type: "get_input" });
+
+                return await new Promise((resolve) => {
+                    pendingInputResolve = resolve;
+                });
+            }
+
+        });
+
         self.postMessage({ type: "ready" });
     }
 
     if (type === "run") {
         try {
+
             const result = await pyodide.runPythonAsync(code);
             self.postMessage({ type: "result", result });
             self.postMessage({ type: "done" });
@@ -33,4 +46,5 @@ self.onmessage = async (event) => {
             self.postMessage({ type: "done" });
         }
     }
+
 };

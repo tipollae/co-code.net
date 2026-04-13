@@ -13,6 +13,7 @@ const stopButton = document.getElementById("stopCode");
 
 var isRunning = false;
 var alreadyStopped = false;
+var executionPositive = true;
 var worker = null;
 
 function createWorker(){
@@ -29,6 +30,7 @@ function createWorker(){
             if (alreadyStopped) {
                 const line = document.createElement("div");
                 line.style.color = "#58d58d";
+                line.style.fontWeight = "bold";
                 line.textContent = "Python is ready ✅";
                 consoleText.appendChild(line);
             }
@@ -37,6 +39,7 @@ function createWorker(){
                 consoleText.textContent = "";
                 const line = document.createElement("div");
                 line.style.color = "#58d58d";
+                line.style.fontWeight = "bold";
                 line.textContent = "Python is ready ✅";
                 consoleText.appendChild(line);
                 alreadyStopped = true;
@@ -67,7 +70,7 @@ function createWorker(){
             if (data.result !== undefined && data.result !== null) {
                 const line = document.createElement("div");
                 line.style.color = "white";
-                line.textContent = data.output;
+                line.textContent = data.result;
                 consoleText.appendChild(line);
             }
         }
@@ -77,6 +80,7 @@ function createWorker(){
             line.style.color = "red";
             line.textContent = String(data.error);
             consoleText.appendChild(line);
+            executionPositive = false;
         }
 
         if (data.type === "done") {
@@ -85,6 +89,22 @@ function createWorker(){
 
             stopButton.style.pointerEvents = "none"
             stopButton.style.opacity = "0.4";
+
+            if (executionPositive){
+
+                const line = document.createElement("div");
+                line.style.color = "#58d58d";
+                line.style.fontWeight = "bold";
+                line.textContent = "/----- code execution successful -----/";
+                consoleText.appendChild(line);
+
+            }
+
+        }
+
+        if (data.type === "get_input"){
+
+            prompt()
 
         }
 
@@ -95,7 +115,7 @@ function createWorker(){
 
 createWorker();
 
-function runCode() {
+async function runCode() {
 
     if (!currentEditor) return;
 
@@ -115,6 +135,8 @@ function runCode() {
 
     stopButton.style.pointerEvents = "auto"
     stopButton.style.opacity = "1";
+
+    executionPositive = true;
 }
 
 function stopCode(){
@@ -124,6 +146,7 @@ function stopCode(){
     worker.terminate();
     const line = document.createElement("div");
     line.style.color = "yellow";
+    line.style.fontWeight = "bold";
     line.textContent = "/----- force stopped execution -----/";
     consoleText.appendChild(line);
 
