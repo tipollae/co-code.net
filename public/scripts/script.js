@@ -1,3 +1,4 @@
+
 const socket = io();
 
 let currentEditor = null;
@@ -8,43 +9,91 @@ window.addEventListener("load", () => {
 
 const consoleText = document.getElementById("consoleText");
 const runButton = document.getElementById("runCode");
+const stopButton = document.getElementById("stopCode");
+
 var isRunning = false;
+var alreadyStopped = false;
+var worker = null;
 
-const worker = new Worker("scripts/pythonWorker.js");
+function createWorker(){
 
-worker.postMessage({ type: "init" });
+    worker = new Worker("scripts/pythonWorker.js")
 
-worker.onmessage = (event) => {
-    const data = event.data;
+    worker.postMessage({ type: "init" });
 
-    if (data.type === "ready") {
-        consoleText.textContent = "Python ready ✅";
-        runButton.style.pointerEvents = "auto";
-        runButton.style.opacity = "1";
-    }
+    worker.onmessage = (event) => {
+        const data = event.data;
 
-    if (data.type === "stdout") {
-        consoleText.style.color = "white";
-        consoleText.textContent += data.output + "\n";
-    }
+        if (data.type === "ready") {
+            
+            if (alreadyStopped) {
+                const line = document.createElement("div");
+                line.style.color = "#58d58d";
+                line.textContent = "Python is ready ✅";
+                consoleText.appendChild(line);
+            }
 
-    if (data.type === "stderr") {
-        consoleText.style.color = "red";
-        consoleText.textContent += data.output + "\n";
-    }
+            else {
+                consoleText.textContent = "";
+                const line = document.createElement("div");
+                line.style.color = "#58d58d";
+                line.textContent = "Python is ready ✅";
+                consoleText.appendChild(line);
+                alreadyStopped = true;
+            }
 
-    if (data.type === "result") {
-        if (data.result !== undefined && data.result !== null) {
-            consoleText.style.color = "white";
-            consoleText.textContent += String(data.result);
+            runButton.style.pointerEvents = "auto";
+            runButton.style.opacity = "1";
         }
-    }
 
-    if (data.type === "error") {
-        consoleText.style.color = "red";
-        consoleText.textContent += String(data.error);
-    }
-};
+        if (data.type === "stdout") {
+            consoleText.style.color = "white";
+            const line = document.createElement("div");
+            line.style.color = "white";
+            line.textContent = data.output;
+            consoleText.appendChild(line);
+
+        }
+
+        if (data.type === "stderr") {
+            consoleText.style.color = "red";
+            const line = document.createElement("div");
+            line.style.color = "red";
+            line.textContent = data.output;
+            consoleText.appendChild(line);
+        }
+
+        if (data.type === "result") {
+            if (data.result !== undefined && data.result !== null) {
+                const line = document.createElement("div");
+                line.style.color = "white";
+                line.textContent = data.output;
+                consoleText.appendChild(line);
+            }
+        }
+
+        if (data.type === "error") {
+            const line = document.createElement("div");
+            line.style.color = "red";
+            line.textContent = String(data.error);
+            consoleText.appendChild(line);
+        }
+
+        if (data.type === "done") {
+            runButton.style.opacity = "1";
+            runButton.style.pointerEvents = "auto";
+
+            stopButton.style.pointerEvents = "none"
+            stopButton.style.opacity = "0.4";
+
+        }
+
+        consoleText.scrollTop = consoleText.scrollHeight;
+
+    };
+}
+
+createWorker();
 
 function runCode() {
 
@@ -63,6 +112,26 @@ function runCode() {
 
     runButton.style.pointerEvents = "none";
     runButton.style.opacity = "0.4";
+
+    stopButton.style.pointerEvents = "auto"
+    stopButton.style.opacity = "1";
+}
+
+function stopCode(){
+
+    if (!worker) return;
+
+    worker.terminate();
+    const line = document.createElement("div");
+    line.style.color = "yellow";
+    line.textContent = "/----- force stopped execution -----/";
+    consoleText.appendChild(line);
+
+    stopButton.style.pointerEvents = "none"
+    stopButton.style.opacity = "0.4";
+
+    createWorker();
+
 }
 
 function switchTab(givenTabID) {

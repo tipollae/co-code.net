@@ -27,8 +27,10 @@ self.onmessage = async (event) => {
         try {
             const result = await pyodide.runPythonAsync(code);
             self.postMessage({ type: "result", result });
+            self.postMessage({ type: "done" });
         } catch (err) {
             self.postMessage({ type: "error", error: String(err) });
+            self.postMessage({ type: "done" });
         }
     }
 };

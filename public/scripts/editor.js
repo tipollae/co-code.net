@@ -4,7 +4,8 @@ import { defaultKeymap, history, historyKeymap } from "https://esm.sh/@codemirro
 import { python } from "https://esm.sh/@codemirror/lang-python";
 import { defaultHighlightStyle } from "https://esm.sh/@codemirror/language";
 import { drawSelection } from "https://esm.sh/@codemirror/view";
-
+import { insertTab, indentLess } from "https://esm.sh/@codemirror/commands";
+import { indentUnit } from "https://esm.sh/@codemirror/language";
 import { syntaxHighlighting, HighlightStyle } from "https://esm.sh/@codemirror/language";
 import { tags } from "https://esm.sh/@lezer/highlight";
 
@@ -44,7 +45,21 @@ print("hello world")`,
         history(),
         drawSelection(),
         highlightActiveLine(),
-        keymap.of([...defaultKeymap, ...historyKeymap]),
+        keymap.of([
+            ...defaultKeymap,
+            ...historyKeymap,
+            {
+                key: "Tab",
+                preventDefault: true,
+                run: insertTab
+            },
+            {
+                key: "Shift-Tab",
+                preventDefault: true,
+                run: indentLess
+            }
+        ]),
+        indentUnit.of("    "),
         python(),
         syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
         syntaxHighlighting(myTheme)
@@ -53,14 +68,27 @@ print("hello world")`,
 
 const state2 = EditorState.create({
     doc: `#woah, another code editor!
-print('im feeling so gassy')`,
+print('im feeling so gassy *farts cutely🎀*')`,
     extensions: [
         lineNumbers(),
         highlightActiveLineGutter(),
         history(),
         drawSelection(),
         highlightActiveLine(),
-        keymap.of([...defaultKeymap, ...historyKeymap]),
+        keymap.of([
+            ...defaultKeymap,
+            ...historyKeymap,
+            {
+                key: "Tab",
+                preventDefault: true,
+                run: insertTab
+            },
+            {
+                key: "Shift-Tab",
+                preventDefault: true,
+                run: indentLess
+            }
+        ]),
         python(),
         syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
         syntaxHighlighting(myTheme)
