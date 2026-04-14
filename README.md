@@ -1,2 +1,2 @@
-# type-it
-typing web game inspired by the card game spot it.
+# co-code.net
+a multiplayer python compiler that's quick and easy
