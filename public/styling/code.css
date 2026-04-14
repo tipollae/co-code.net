@@ -500,13 +500,13 @@ body{
 
     #leftSide{
 
-        width: 300px;
+        width: 430px;
 
     }
 
     #rightSide{
 
-        width: 400px;
+        width: 300px;
 
     }
 
@@ -525,6 +525,19 @@ body{
     .userInput input{
 
         font-size: 15.5px;
+
+    }
+
+    .otherTabsContainer{
+
+        position: relative;
+        left: 0;
+        width: 400px;
+        height: 500px;
+
+        display: flex;
+        flex-direction: column;
+        flex: 1;
 
     }
 

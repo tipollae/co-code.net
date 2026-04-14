@@ -110,7 +110,7 @@ function createWorker(){
                 const line = document.createElement("div");
                 line.style.color = "#58d58d";
                 line.style.fontWeight = "bold";
-                line.textContent = "/----- code execution successful -----/";
+                line.textContent = "/code execution successful/";
                 consoleText.appendChild(line);
 
             }
@@ -189,7 +189,7 @@ function stopCode(){
     const line = document.createElement("div");
     line.style.color = "yellow";
     line.style.fontWeight = "bold";
-    line.textContent = "/----- force stopped execution -----/";
+    line.textContent = "/force stopped execution/";
     consoleText.appendChild(line);
 
     stopButton.style.pointerEvents = "none"
