@@ -118,7 +118,7 @@ Current protections include:
 
 # ✅ Fixed and working
 * Size limiting. There is now a cap on the amount of code you can paste/write. Users may still lie about their code with more knowledge about socket.io, however, users can't bypass server set limit on the amount of code typed/pasted.
-* Rate limiting. There are now timers set to calculate whether a user is spamming the chat/code emittinng.
+* Rate limiting. There are now timers set to calculate whether a user is spamming the chat/code emitting.
 
 # ➕ Potential features
 
