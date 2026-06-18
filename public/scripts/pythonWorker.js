@@ -16,7 +16,6 @@ self.onmessage = async (event) => {
 
         controlArray = new Int32Array(sab);
         inputBytes = new Uint8Array(inputBuffer);
-
         pyodide.setStdout({
             raw: (byte) => {
                 const ch = String.fromCharCode(byte);
@@ -73,16 +72,18 @@ ${code}
 import sys
 sys.stdout.flush()
 `);
-        if (currentLine.length > 0) {
-            self.postMessage({
-                type: "stdout",
-                output: currentLine
-            });
-            currentLine = "";
-        }
-            console.log(`currentLine: ${currentLine}`)
+            if (currentLine.length > 0) {
+                self.postMessage({
+                    type: "stdout",
+                    output: currentLine
+                });
+                currentLine = "";
+            }
+            console.log(`currentLine: ${currentLine}`);
             self.postMessage({ type: "done" });
-        } catch (err) {
+        } 
+        
+        catch (err) {
             self.postMessage({ type: "error", error: String(err) });
             self.postMessage({ type: "done" });
             currentLine = ""

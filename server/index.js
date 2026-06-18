@@ -44,7 +44,7 @@ const characters = [
     "j", "k", "l", "m", "n", "o", "p", "q", "r",
     "s", "t", "u", "v", "w", "x", "y", "z", "1",
     "2", "3", "4", "5", "6", "7", "8", "9", "0"
-]
+];
 
 const tokens = {};
 const usernames = [];
@@ -456,9 +456,10 @@ function extractData(givenSocket){
             socketID: user.socketID,
         }));
 
-    })
+    });
 
     givenSocket.emit("confidential-data", fakeRooms, Object.keys(tokens).length);
+
 }
 
 function clearRoom(givenRoomID){
