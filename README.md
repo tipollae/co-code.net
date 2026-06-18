@@ -4,6 +4,8 @@
 
 ---
 Check it out! https://co-code.net/
+<img width="1917" height="975" alt="co-code net photo" src="https://github.com/user-attachments/assets/80f38606-66f2-410b-a6ef-d9c607b5fca9" />
+
 ## 🚀 Features
 
 ### 👥 Multiplayer Coding Rooms
@@ -117,12 +119,18 @@ Current protections include:
 ---
 
 # ✅ Fixed and working
-* Size limiting. There is now a cap on the amount of code you can paste/write. Users may still lie about their code with more knowledge about socket.io, however, users can't bypass server set limit on the amount of code typed/pasted.
-* Rate limiting. There are now timers set to calculate whether a user is spamming the chat/code emittinng.
+* Size limiting: There is now a cap on the amount of code you can paste/write. Users may still lie about their code with more knowledge about socket.io, however, users can't bypass server set limit on the amount of code typed/pasted.
+* Rate limiting: There are now timers set to calculate whether a user is spamming the chat/code emitting.
+
+# 🔨 Currently in progress
+* Refactoring: Currently a good percentage of the server code isn't encapsulated and are in a single index.js file, and after working on a different project and learning a lot, I would like to add a lot more clean architecture and professional practices on this project for both scalability and cleanliness. This could include class encapsulation, a separate database handler, separate rooms handler, better token generation using crypto, and many more.
 
 # ➕ Potential features
 
 Things I am thinking of adding later on (not soon):
 
-* Patch updating. Optimization problem is that code is currently updated via whole strings instead of only the part of code that actually changed. Patch updating will allow udpates to only include characters that have changed or have beenn deleted, increasing performance durastically and lowering the size of data being held by the server and emitted into sockets.
-* Multiple servers. Depending on how big co-code.net becomes, having a multi-server system will definetely be considered for both faster connection in differing regions and scalability.
+* Patch updating: Optimization problem is that code is currently updated via whole strings instead of only the part of code that actually changed. Patch updating will allow udpates to only include characters that have changed or have beenn deleted, increasing performance durastically and lowering the size of data being held by the server and emitted into sockets.
+* JSON file question system: Using existing coding questions from Leetcode that are available on GitHub, a system could be made for the room host to import existing questions or their own.
+* Room commands for host.
+* Accounts and guest accounts.
+* Multiple servers: Depending on how big co-code.net becomes, having a multi-server system will definetely be considered for both faster connection in differing regions and scalability.
