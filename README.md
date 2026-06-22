@@ -89,14 +89,19 @@ The server mainly handles:
 
 # ⚡ Performance Design
 
-co-code.net avoids sending updates on every keystroke.
+A naive implementation would emit socket events on every keystroke,
+causing excessive network traffic and server load.
 
-Instead:
+Instead, co-code.net uses a dirty flag synchronization system.
 
-1. Users are marked as "dirty" when their code changes
-2. The server periodically syncs only changed users
-3. Rooms without changes are skipped entirely
+When a user edits code:
+1. The user is marked as dirty
+2. The room is marked as active
+3. A periodic synchronization loop broadcasts only modified code
+4. Inactive rooms are skipped entirely
 
+This significantly reduces unnecessary socket events while keeping
+the experience responsive for users.
 This helps reduce:
 
 * Network spam
