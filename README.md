@@ -14,18 +14,18 @@ Check it out! https://co-code.net/
 * Watch code update live in real time
 * Lightweight synchronization system
 
-### 🐍 Browser-Based Python Execution
+### 🐍 Browser Based Python Execution
 
 * Python runs entirely in the browser using Pyodide
-* No server-side code execution required
+* No server side code execution required
 * Safer and more scalable architecture
 
-### 💬 Real-Time Chat
+### 💬 Real Time Chat
 
-* Built-in room chat
-* Socket-based communication
+* Built in room chat
+* Socket based communication
 
-### 🧠 Developer-Focused Features
+### 🧠 Developer Focused Features
 
 * Multiple editor tabs
 * Copy other users' code instantly
@@ -69,7 +69,7 @@ Users join a shared room where they can:
 
 Unlike traditional online compilers, co-code.net does **not** execute Python on the server.
 
-Instead, Python runs client-side using Pyodide.
+Instead, Python runs client side using Pyodide.
 
 This allows:
 
@@ -113,7 +113,7 @@ Current protections include:
 * HTTPS deployment
 * Content Security Policy (CSP)
 * Input validation
-* Token-based session
+* Token based session
 * No XSS vulnerabilities
 
 ---
