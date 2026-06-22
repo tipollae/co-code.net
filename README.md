@@ -4,7 +4,7 @@
 
 ---
 Check it out! https://co-code.net/
-<img width="1917" height="975" alt="co-code net photo" src="https://github.com/user-attachments/assets/80f38606-66f2-410b-a6ef-d9c607b5fca9" />
+<img width="1920" height="1080" alt="co-code net gif" src="https://github.com/user-attachments/assets/4e112f9d-df27-4f75-83d1-7d41733b0daf" />
 
 ## 🚀 Features
 
