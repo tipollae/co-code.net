@@ -46,9 +46,16 @@ const characters = [
     "2", "3", "4", "5", "6", "7", "8", "9", "0"
 ];
 
+/*
+REPLACED:
 const tokens = {};
 const usernames = [];
-const rooms = {};
+*/
+const { tokenHandler } = require("./dataScripts/tokens/tokenHandler");
+const serverTokensHandler = new tokenHandler(0.1, 0.5);
+const tokenEventsHandler = require("./dataScripts/tokens/tokenEventsHandler");
+
+//REPLACED: const rooms = {};
 
 /*
 
@@ -97,6 +104,8 @@ rooms[id].users[tokenID] = {
 //on connection tasks
 io.on("connection", (socket)=>{
 
+    /*
+    REPLACED:
     socket.on("connection-protocol", (givenToken)=>{
 
         if (tokens[givenToken]){
@@ -117,7 +126,10 @@ io.on("connection", (socket)=>{
         }
 
     })
+    */
 
+    /*
+    REPLACED:
     socket.on("create-user", (username)=>{
 
         let validUsername = validateUsername(username);
@@ -134,8 +146,8 @@ io.on("connection", (socket)=>{
             socket.data.username = username;
             socket.emit("valid-username", validUsername[1], socket.data.token, socket.data.username);
         }
-
     })
+    */
 
     socket.on("join-room", (givenRoomCode)=>{
 
@@ -319,6 +331,8 @@ io.on("connection", (socket)=>{
 
     })
 
+    /*
+    REPLACED:
     socket.on("log-user-out", ()=>{
 
         if (!tokens[socket.data.token]) return;
@@ -337,10 +351,12 @@ io.on("connection", (socket)=>{
 
         }
 
-    })
+    })*/
 
     socket.on("disconnect", ()=>{
 
+        /*
+        REPLACED:
         if (!tokens[socket.data.token]) return;
 
         const foundSocketIndex = tokens[socket.data.token].sockets.indexOf(socket.id);
@@ -354,6 +370,7 @@ io.on("connection", (socket)=>{
             tokens[socket.data.token].lastLoggedOn = Date.now();
 
         }
+            */
 
         if (socket.data.roomID){
 
@@ -374,7 +391,7 @@ io.on("connection", (socket)=>{
                 io.to(socketRoomID).emit("server-message", `${socket.data.username} has left the room :(`)
                 io.to(socketRoomID).emit("user-left-room", socket.id, socket.data.username);
 
-                if (rooms[socketRoomID].hostToken == socket.data.token){
+                if (rooms[socketRoomID].hostToken === socket.data.token){
 
                     rooms[socketRoomID].noHostTimer = setTimeout(() => {
 
@@ -391,6 +408,8 @@ io.on("connection", (socket)=>{
 
         }
 
+        /*
+        REPLACED:
         if (tokens[socket.data.token].manualLogOut && tokens[socket.data.token].sockets.length === 0){
 
             const usernameIndex = usernames.indexOf(tokens[socket.data.token].username);
@@ -399,9 +418,10 @@ io.on("connection", (socket)=>{
                 usernames.splice(usernameIndex, 1);
             }
 
-            delete tokens[socket.data.token]
+            delete tokens[socket.data.token];
 
         }
+            */
 
     })
 
@@ -434,6 +454,7 @@ io.on("connection", (socket)=>{
 
     })
 
+    tokenEventsHandler(io, socket, serverTokensHandler);
 
 })
 
@@ -485,6 +506,9 @@ function clearRoom(givenRoomID){
 
 }
 
+/*
+
+REPLACED:
 function generateToken(username, socketID){
 
     let createdToken = Math.random().toString(36).substring(2);
@@ -507,6 +531,7 @@ function generateToken(username, socketID){
     return createdToken;
 
 }
+*/
 
 function generateRoomCode(){
 
@@ -522,6 +547,8 @@ function generateRoomCode(){
 
 }
 
+/*
+REPLACED:
 function validateUsername(username){
 
     const MAX_LENGTH = 12;
@@ -533,7 +560,10 @@ function validateUsername(username){
     else return [true, "Valid username."];
 
 }
+*/
 
+/*
+REPLACED:
 async function tokensLoop(){
 
     const hours = 0.5;
@@ -565,6 +595,9 @@ async function tokensLoop(){
     tokensLoop();
     
 }
+    */
+
+
 tokensLoop();
 
 async function dirtyRoomsLoop(){
