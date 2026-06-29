@@ -123,12 +123,15 @@ Current protections include:
 
 ---
 
-# ✅ Fixed and working
+# ✅ Fixed/Done
 * Size limiting: There is now a cap on the amount of code you can paste/write. Users may still lie about their code with more knowledge about socket.io, however, users can't bypass server set limit on the amount of code typed/pasted.
 * Rate limiting: There are now timers set to calculate whether a user is spamming the chat/code emitting.
 
 # 🔨 Currently in progress
-* Refactoring: Currently a good percentage of the server code isn't encapsulated and are in a single index.js file, and after working on a different project and learning a lot, I would like to add a lot more clean architecture and professional practices on this project for both scalability and cleanliness. This could include class encapsulation, a separate database handler, separate rooms handler, better token generation using crypto, and many more.
+* Refactoring: Monolith -> Modular.
+* Class encapsulation (Room handler, Token handler)
+* Socket.IO middleware
+* Single loop scheduler instead of multiple setInterval()'s
 
 # ➕ Potential Features
 
