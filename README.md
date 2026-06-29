@@ -145,7 +145,7 @@ Things I am thinking of adding later on (not soon):
 
 # Learning Documentation
 
-Middle ware:
+## Middle ware:
 While refactoring co-code.net from a monolithic architecture into a modular one, I finally understood how Socket.IO middleware (io.use()) and next() are intended to be used.
 
 Previously, almost every Socket.IO event performed its own lookup against the server's token database. Although functional, this meant a malicious or modified client could simply ignore a server request to provide a token and attempt to emit protected events anyway. The server would still have to process those events before rejecting them, creating unnecessary work and increasing the attack surface.
