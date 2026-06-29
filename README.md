@@ -89,10 +89,10 @@ The server mainly handles:
 
 # ⚡ Performance Design
 
-A naive implementation would emit socket events on every keystroke,
+Rather than emittinng socket events on every keystroke,
 causing excessive network traffic and server load.
 
-Instead, co-code.net uses a dirty flag synchronization system.
+co-code.net instead uses a dirty flag synchronization system.
 
 When a user edits code:
 1. The user is marked as dirty
