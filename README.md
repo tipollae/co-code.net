@@ -141,7 +141,7 @@ Things I am thinking of adding later on (not soon):
 * JSON file question system: Using existing coding questions from Leetcode that are available on GitHub, a system could be made for the room host to import existing questions or their own.
 * Room commands for host.
 * Accounts and guest accounts.
-* Multiple servers: Depending on how big co-code.net becomes, having a multi-server system will definetely be considered for both faster connection in differing regions and scalability.
+* Multiple servers: Depending on how big co-code.net becomes, having it scale horizontally will be a consideration.
 
 # Learning Documentation
 
