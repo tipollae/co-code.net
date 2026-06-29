@@ -130,7 +130,7 @@ Current protections include:
 # 🔨 Currently in progress
 * Refactoring: Currently a good percentage of the server code isn't encapsulated and are in a single index.js file, and after working on a different project and learning a lot, I would like to add a lot more clean architecture and professional practices on this project for both scalability and cleanliness. This could include class encapsulation, a separate database handler, separate rooms handler, better token generation using crypto, and many more.
 
-# ➕ Potential features
+# ➕ Potential Features
 
 Things I am thinking of adding later on (not soon):
 
@@ -139,3 +139,14 @@ Things I am thinking of adding later on (not soon):
 * Room commands for host.
 * Accounts and guest accounts.
 * Multiple servers: Depending on how big co-code.net becomes, having a multi-server system will definetely be considered for both faster connection in differing regions and scalability.
+
+# Learning Documentation
+
+Middle ware:
+While refactoring co-code.net from a monolithic architecture into a modular one, I finally understood how Socket.IO middleware (io.use()) and next() are intended to be used.
+
+Previously, almost every Socket.IO event performed its own lookup against the server's token database. Although functional, this meant a malicious or modified client could simply ignore a server request to provide a token and attempt to emit protected events anyway. The server would still have to process those events before rejecting them, creating unnecessary work and increasing the attack surface.
+
+By moving authentication into io.use(), every new socket connection is validated before the connection is established. Once the middleware calls next(), I know that socket.data.token contains a valid, verified token for the lifetime of that connection. As a result, individual event handlers no longer need to repeatedly perform the same authentication checks, making the codebase both cleaner and more secure.
+
+This was one of those concepts that only really clicked once I refactored the project. Seeing the system split into smaller modules made it much easier to identify duplicated logic and recognize where middleware provided the right level of abstraction.
