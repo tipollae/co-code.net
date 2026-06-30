@@ -132,6 +132,7 @@ Current protections include:
 * Class encapsulation (Room handler, Token handler)
 * Socket.IO middleware
 * Single loop scheduler instead of multiple setInterval()'s
+* Persistent coding editors in rooms after abrupt disconnect.
 
 # ➕ Potential Features
 
