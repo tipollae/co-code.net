@@ -145,7 +145,7 @@ Things I am thinking of adding later on (not soon):
 
 # Learning Documentation
 
-## Encapsulation
+## Encapsulation - 26/6/26
 
 I started understanding encapsulation more when I was working on Baklafy. This project made me really think about the systems that I was going to be use and how each function would interact with each other. Although this wasn't where it fully clicked, it happened while refactoring my code on this project from one large monolithic file into separate handler classes/modules.
 
@@ -161,7 +161,7 @@ I also learned that encapsulation is not just about using classes. It is about c
 
 Overall, encapsulation made me think more about designing systems rather than just writing functions that make things work. It helped me separate responsibilities, reduce messy dependencies, and make my code easier to refactor in the future.
 
-## Middle ware
+## Middle ware - 30/6/26
 While refactoring co-code.net from a monolithic architecture into a modular one, I finally understood how Socket.IO middleware (io.use()) and next() are intended to be used.
 
 Previously, almost every Socket.IO event performed its own lookup against the server's token database. Although functional, this meant a malicious or modified client could simply ignore a server request to provide a token and attempt to emit protected events anyway. The server would still have to process those events before rejecting them, creating unnecessary work and increasing the attack surface.
