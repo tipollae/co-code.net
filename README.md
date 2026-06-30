@@ -145,6 +145,22 @@ Things I am thinking of adding later on (not soon):
 
 # Learning Documentation
 
+## Encapsulation
+
+I started understanding encapsulation more when I was working on Baklafy. This project made me really think about the systems that I was going to be use and how each function would interact with each other. Although this wasn't where it fully clicked, it happened while refactoring my code on this project from one large monolithic file into separate handler classes/modules.
+
+Before, a lot of my server logic directly accessed and modified shared objects like rooms, tokens, users, and sockets from different parts of the code. This worked, but it made the system harder to reason about because many parts of the program could change the same data directly. Adding new features was also a headache, as I had to scroll through hundreds of lines of code across a single index.js file. I had an enormouse spagetti of code.
+
+The reason why this concept was able to come to understand this significantly was most likely due to the fact that co-code.net already had all the systems lying around. All I had to do was decide which parts belonged to which. From there it was just a bunch of puzzle pieces that needed organizing. In comparison, Baklafy was a fresh project. I was already overwhelmed and overthinking the system without even adding the essential parts of the system yet.
+
+Encapsulation helped me realize that each system should own its own data and expose controlled methods for interacting with it. For example, instead of other parts of the code directly changing this.rooms, the room handler can provide methods like createRoom(), getRoom(), updateRoom(), or deleteRoom(). This keeps the logic for managing rooms inside one place.
+
+This makes the code safer and easier to maintain because changes to room logic only need to happen inside the room handler. It also makes the rest of the server cleaner because other modules do not need to know exactly how rooms are stored internally.
+
+I also learned that encapsulation is not just about using classes. It is about controlling access to data and reducing how much the rest of the program depends on internal details. Even if the data is still stored in objects, the important part is that I interact with it through clear methods instead of directly modifying it everywhere.
+
+Overall, encapsulation made me think more about designing systems rather than just writing functions that make things work. It helped me separate responsibilities, reduce messy dependencies, and make my code easier to refactor in the future.
+
 ## Middle ware
 While refactoring co-code.net from a monolithic architecture into a modular one, I finally understood how Socket.IO middleware (io.use()) and next() are intended to be used.
 
