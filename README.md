@@ -161,7 +161,7 @@ I also learned that encapsulation is not just about using classes. It is about c
 
 Overall, encapsulation made me think more about designing systems rather than just writing functions that make things work. It helped me separate responsibilities, reduce messy dependencies, and make my code easier to refactor in the future.
 
-## Middle ware - 30/6/26
+## Middleware - 30/6/26
 While refactoring co-code.net from a monolithic architecture into a modular one, I finally understood how Socket.IO middleware (io.use()) and next() are intended to be used.
 
 Previously, almost every Socket.IO event performed its own lookup against the server's token database. Although functional, this meant a malicious or modified client could simply ignore a server request to provide a token and attempt to emit protected events anyway. The server would still have to process those events before rejecting them, creating unnecessary work and increasing the attack surface.
