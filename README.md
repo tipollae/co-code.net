@@ -151,7 +151,7 @@ I started understanding encapsulation more when I was working on Baklafy. This p
 
 Before, a lot of my server logic directly accessed and modified shared objects like rooms, tokens, users, and sockets from different parts of the code. This worked, but it made the system harder to reason about because many parts of the program could change the same data directly. Adding new features was also a headache, as I had to scroll through hundreds of lines of code across a single index.js file. I had an enormouse spagetti of code.
 
-The reason why this concept started making sense was most likely due to the fact that co-code.net already had all the systems lying around. All I had to do was decide which parts belonged to which. From there it was just a bunch of puzzle pieces that needed organizing. In comparison, Baklafy was a fresh project. I was already overwhelmed and overthinking the system without even adding the essential parts of the system yet.
+The reason why this concept started making sense was most likely due to the fact that co-code.net already had all the systems lying around. All I had to do was decide which responsibilities belonged to which handler. From there it was just a bunch of puzzle pieces that needed organizing. In comparison, Baklafy was a fresh project. I was already overwhelmed and overthinking the system without even adding the essential parts of the system yet.
 
 Encapsulation helped me realize that each system should own its own data and expose controlled methods for interacting with it. For example, instead of other parts of the code directly changing this.rooms, the room handler can provide methods like createRoom(), getRoom(), updateRoom(), or deleteRoom(). This keeps the logic for managing rooms inside one place.
 
