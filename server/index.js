@@ -147,14 +147,16 @@ io.on("connection", (socket)=>{
 
         const foundToken = serverTokenHandler.getToken(socket.data.token)
         if (!foundToken) return;
-        console.log(socket.data.roomCode)
+        console.log(socket.data.roomCode);
         if (socket.data.roomCode){
 
             const foundRoom = serverRoomHandler.getRoom(socket.data.roomCode);
             if (!foundRoom) return;
 
             serverRoomHandler.deleteRoomUser(socket.data.roomCode, socket.data.token, socket.id);
-            serverRoomHandler.addToDeleteRooms(socket.data.roomCode);
+            if (serverRoomHandler.checkIsHost(socket.data.roomCode, socket.data.token)){
+                serverRoomHandler.addToDeleteRooms(socket.data.roomCode);
+            }
 
             io.to(foundRoom.roomCode).emit("server-message", `${socket.data.username} has left the room :(`)
             io.to(foundRoom.roomCode).emit("user-left-room", socket.id, socket.data.username);
