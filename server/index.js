@@ -46,16 +46,13 @@ const characters = [
     "2", "3", "4", "5", "6", "7", "8", "9", "0"
 ];
 
-/*
-REPLACED:
-const tokens = {};
-const usernames = [];
-*/
 const { tokenHandler } = require("./dataScripts/tokens/tokenHandler");
-const serverTokensHandler = new tokenHandler(0.1, 0.5);
+const serverTokenHandler = new tokenHandler(0.1, 0.5);
 const tokenEventsHandler = require("./dataScripts/tokens/tokenEventsHandler");
 
-//REPLACED: const rooms = {};
+const { roomHandler } = require("./dataScripts/rooms/roomHandler");
+const serverRoomHandler = new roomHandler();
+const roomEventsHandler = require("./dataScripts/rooms/roomEventsHandler")
 
 /*
 
@@ -106,142 +103,6 @@ io.on("connection", (socket)=>{
 
     /*
     REPLACED:
-    socket.on("connection-protocol", (givenToken)=>{
-
-        if (tokens[givenToken]){
-            socket.emit("existing-token", tokens[givenToken].username)
-            socket.data.token = givenToken;
-            socket.data.username = tokens[givenToken].username;
-            socket.data.roomID = null;
-            tokens[givenToken].lastLoggedOn = null;
-            if (!tokens[givenToken].sockets.includes(socket.id)) {
-                tokens[givenToken].sockets.push(socket.id);
-            }
-        }
-
-        else{
-
-            socket.emit("invalid-token")
-
-        }
-
-    })
-    */
-
-    /*
-    REPLACED:
-    socket.on("create-user", (username)=>{
-
-        let validUsername = validateUsername(username);
-
-        if (!validUsername[0]){
-
-            socket.emit("invalid-username", validUsername[1]);
-
-        }
-
-        else {
-            let createdToken = generateToken(username, socket.id)
-            socket.data.token = createdToken;
-            socket.data.username = username;
-            socket.emit("valid-username", validUsername[1], socket.data.token, socket.data.username);
-        }
-    })
-    */
-
-    socket.on("join-room", (givenRoomCode)=>{
-
-        givenRoomCode = givenRoomCode.toLowerCase();
-        givenRoomCode = givenRoomCode.replaceAll(" ", "")
-        let existingRoom = rooms[givenRoomCode];
-
-        if (!tokens[socket.data.token]) {
-            socket.emit("invalid-token");
-            return;
-        }
-
-        if (!existingRoom){
-            socket.emit("invalid-room", "Room does not exist.");
-            return;
-        }
-
-        if (existingRoom.users[socket.data.token]){
-
-            socket.emit("invalid-room", "You are already in that room.");
-            return;
-
-        }
-
-        socket.emit("valid-room", givenRoomCode)
-
-    })
-
-    socket.on("validate-room-entrance", async (givenRoomCode)=>{
-
-        let loweredRoomCode = givenRoomCode.toLowerCase();
-
-        if (!rooms[loweredRoomCode]){
-            socket.emit("invalid-room-entrance", "Room does not exist."); 
-            return;
-        }
-
-        if (!tokens[socket.data.token]) {
-            socket.emit("invalid-token");
-            return;
-        }
-
-        if (tokens[socket.data.token].rooms.includes(loweredRoomCode)) {
-            socket.emit("invalid-room-entrance", "You are already in this room"); 
-            return;
-        }
-
-        tokens[socket.data.token].rooms.push(loweredRoomCode);
-
-        rooms[loweredRoomCode].users[socket.data.token] = {};
-        rooms[loweredRoomCode].users[socket.data.token].socketID = socket.id;
-        rooms[loweredRoomCode].users[socket.data.token].username = socket.data.username;
-        rooms[loweredRoomCode].users[socket.data.token].messagesSent = 0;
-
-        socket.data.roomID = loweredRoomCode;
-
-        socket.join(loweredRoomCode);
-        socket.to(loweredRoomCode).emit("other-user-joined", socket.data.username, socket.id);
-        socket.emit("server-message", `Welcome ${socket.data.username}, to room ${socket.data.roomID} :D`)
-
-        let usersList = [];
-
-        Object.keys(rooms[loweredRoomCode].users).forEach((roomUser)=>{
-
-            if (roomUser == socket.data.token) return;
-
-            let data = {};
-            data.socketID = rooms[loweredRoomCode].users[roomUser].socketID;
-            data.username = rooms[loweredRoomCode].users[roomUser].username;
-
-            usersList.push(data);
-
-        });
-
-        socket.emit("get-room-users", usersList);
-
-        if (socket.data.token == rooms[loweredRoomCode].hostToken){
-
-            clearTimeout(rooms[loweredRoomCode].noHostTimer)
-            rooms[loweredRoomCode].noHostTimer = null;
-
-        }
-
-        await wait(2000);
-
-        if (!rooms[loweredRoomCode]) return;
-
-        io.to(loweredRoomCode).emit(
-            "update-other-user-code",
-            rooms[loweredRoomCode].otherUserCode
-        );
-
-    })
-
     socket.on("send-message", (givenMessage)=>{
 
         givenMessage = String(givenMessage);
@@ -265,7 +126,9 @@ io.on("connection", (socket)=>{
         rooms[socket.data.roomID].users[socket.data.token].messagesSent ++
 
     });
+    */
 
+    /*
     socket.on("update-user-code", (givenData)=>{
 
         if (!rooms[socket.data.roomID]) return;
@@ -278,150 +141,27 @@ io.on("connection", (socket)=>{
         rooms[socket.data.roomID].dirtyUsers[socket.id] = givenData;
 
     })
-
-    socket.on("create-room", ()=>{
-
-        if (!tokens[socket.data.token]){
-            socket.emit("invalid-token");
-            return;
-        }
-
-        if (tokens[socket.data.token].createdRooms + 1 > 3){
-
-            socket.emit("failed-creating-room")
-            return;
-
-        }
-        
-        let roomCode = generateRoomCode();
-
-        while (rooms[roomCode]) roomCode = generateRoomCode();
-
-        rooms[roomCode] = {
-
-            host: socket.data.username,
-            hostToken: socket.data.token,
-            users: {},
-            isDirty: false,
-            otherUserCode: {},
-            dirtyUsers: {},
-            noHostTimer: setTimeout(()=>{
-                clearRoom(roomCode)
-            }, 10000),
-            updateCodeRequest: setInterval(()=>{
-                io.to(roomCode).emit("request-code")
-            }, 1000),
-            messageLimitingTimer: setInterval(()=>{
-
-                Object.keys(rooms[roomCode].users).forEach((token)=>{
-
-                    if (!rooms[roomCode].users[token]) return;
-                    if (rooms[roomCode].users[token].messagesSent === 0) return;
-                    rooms[roomCode].users[token].messagesSent --;
-
-                })
-
-            }, 3300)
-        
-        }
-
-        tokens[socket.data.token].createdRooms ++
-
-        socket.emit("valid-room", roomCode);        
-
-    })
-
-    /*
-    REPLACED:
-    socket.on("log-user-out", ()=>{
-
-        if (!tokens[socket.data.token]) return;
-
-        let tokenSockets = [...tokens[socket.data.token].sockets];
-
-        tokens[socket.data.token].manualLogOut = true;
-
-        for (let i = 0; i < tokenSockets.length; i++){
-
-            const foundSocket = io.sockets.sockets.get(tokenSockets[i]);
-
-            if (foundSocket) {
-                foundSocket.disconnect(true);
-            }
-
-        }
-
-    })*/
+        */
 
     socket.on("disconnect", ()=>{
 
-        /*
-        REPLACED:
-        if (!tokens[socket.data.token]) return;
+        const foundToken = serverTokenHandler.getToken(socket.data.token)
+        if (!foundToken) return;
+        console.log(socket.data.roomCode)
+        if (socket.data.roomCode){
 
-        const foundSocketIndex = tokens[socket.data.token].sockets.indexOf(socket.id);
+            const foundRoom = serverRoomHandler.getRoom(socket.data.roomCode);
+            if (!foundRoom) return;
 
-        if (foundSocketIndex !== -1) {
-            tokens[socket.data.token].sockets.splice(foundSocketIndex, 1);
-        }
+            serverRoomHandler.deleteRoomUser(socket.data.roomCode, socket.data.token, socket.id);
+            serverRoomHandler.addToDeleteRooms(socket.data.roomCode);
 
-        if (tokens[socket.data.token].sockets.length === 0){
-
-            tokens[socket.data.token].lastLoggedOn = Date.now();
-
-        }
-            */
-
-        if (socket.data.roomID){
-
-            let socketRoomID = socket.data.roomID;
-
-            if (rooms[socketRoomID]) {
-
-                delete rooms[socketRoomID].users[socket.data.token];
-                delete rooms[socketRoomID].otherUserCode[socket.id];
-                delete rooms[socketRoomID].dirtyUsers[socket.id];
-
-                let foundRoomIndex = tokens[socket.data.token].rooms.indexOf(socketRoomID);
-
-                if (foundRoomIndex !== -1) {
-                    tokens[socket.data.token].rooms.splice(foundRoomIndex, 1);
-                }
-
-                io.to(socketRoomID).emit("server-message", `${socket.data.username} has left the room :(`)
-                io.to(socketRoomID).emit("user-left-room", socket.id, socket.data.username);
-
-                if (rooms[socketRoomID].hostToken === socket.data.token){
-
-                    rooms[socketRoomID].noHostTimer = setTimeout(() => {
-
-                        if (!rooms[socketRoomID]) return;
-
-                        io.to(socketRoomID).emit("host-left");
-                        clearRoom(socketRoomID);
-
-                    }, 10000);
-
-                }
-
-            }
+            io.to(foundRoom.roomCode).emit("server-message", `${socket.data.username} has left the room :(`)
+            io.to(foundRoom.roomCode).emit("user-left-room", socket.id, socket.data.username);
 
         }
 
-        /*
-        REPLACED:
-        if (tokens[socket.data.token].manualLogOut && tokens[socket.data.token].sockets.length === 0){
-
-            const usernameIndex = usernames.indexOf(tokens[socket.data.token].username);
-
-            if (usernameIndex !== -1) {
-                usernames.splice(usernameIndex, 1);
-            }
-
-            delete tokens[socket.data.token];
-
-        }
-            */
+        serverTokenHandler.removeSocketFromToken(socket.data.token, socket.id);
 
     })
 
@@ -454,7 +194,8 @@ io.on("connection", (socket)=>{
 
     })
 
-    tokenEventsHandler(io, socket, serverTokensHandler);
+    tokenEventsHandler(io, socket, serverTokenHandler);
+    roomEventsHandler.roomEventsHandler(io, socket, serverRoomHandler, serverTokenHandler)
 
 })
 
@@ -469,20 +210,22 @@ function extractData(givenSocket){
 
     var fakeRooms = {};
 
-    Object.keys(rooms).forEach((roomID)=>{
+    Object.keys(serverRoomHandler.rooms).forEach((roomCode)=>{
 
-        fakeRooms[roomID] = {};
-        fakeRooms[roomID].users = Object.values(rooms[roomID].users).map(user => ({
+        fakeRooms[roomCode] = {};
+        fakeRooms[roomCode].users = Object.values(serverRoomHandler.rooms[roomCode].users).map(user => ({
             username: user.username,
             socketID: user.socketID,
         }));
 
     });
 
-    givenSocket.emit("confidential-data", fakeRooms, Object.keys(tokens).length);
+    givenSocket.emit("confidential-data", fakeRooms, Object.keys(serverTokenHandler.tokens).length);
 
 }
 
+/*
+REPLACED:
 function clearRoom(givenRoomID){
 
     if (!rooms[givenRoomID]) return;
@@ -503,6 +246,61 @@ function clearRoom(givenRoomID){
 
     io.in(givenRoomID).disconnectSockets(true);
     delete rooms[givenRoomID];
+
+}
+    */
+
+function roomCleanUp(){
+
+    Object.keys(serverRoomHandler.roomsToDelete).forEach(roomCode=>{
+
+        const foundRoom = serverRoomHandler.getRoom(roomCode);
+        if (!foundRoom) return;
+
+        serverRoomHandler.roomsToDelete[roomCode].counter ++;
+        if (serverRoomHandler.roomsToDelete[roomCode].counter >= serverRoomHandler.roomsToDelete[roomCode].limit){
+
+            io.in(roomCode).disconnectSockets(true);
+            serverRoomHandler.deleteDirtyUsers(roomCode);
+            serverRoomHandler.deleteDirtyRoom(roomCode);
+            serverRoomHandler.removeFromDeleteRooms(roomCode)
+            serverRoomHandler.deleteRoom(roomCode);
+
+            const foundToken = serverTokenHandler.getToken(foundRoom.hostToken);
+            if (!foundToken) return;
+            serverTokenHandler.subtractCreatedRoomsFromToken(foundRoom.hostToken);
+
+        }
+
+    })
+
+}
+
+function roomMessageRate(){
+
+    Object.keys(serverRoomHandler.rooms).forEach(roomCode=>{
+        const foundRoom = serverRoomHandler.getRoom(roomCode);
+        if (!foundRoom) return;
+
+        Object.keys(foundRoom.users).forEach(token=>{
+
+            foundRoom.users[token].messagesSent = Math.max(0, foundRoom.users[token].messagesSent - 1);        
+
+        })
+
+    })
+
+}
+
+function emitRoomUserCode(){
+
+    Object.keys(serverRoomHandler.rooms).forEach(roomCode=>{
+        const foundRoom = serverRoomHandler.getRoom(roomCode);
+        if (!foundRoom) return;
+        io.to(roomCode).emit("request-code");
+        console.log('update code loop')
+
+    })
 
 }
 
@@ -532,21 +330,6 @@ function generateToken(username, socketID){
 
 }
 */
-
-function generateRoomCode(){
-
-    let roomCode = "";
-
-    for (let i = 0; i < 4; i++){
-
-        let chosenCharacter = Math.floor(Math.random()*characters.length);
-        roomCode += characters[chosenCharacter];
-
-    }
-    return roomCode
-
-}
-
 /*
 REPLACED:
 function validateUsername(username){
@@ -597,35 +380,59 @@ async function tokensLoop(){
 }
     */
 
-
-tokensLoop();
-
-async function dirtyRoomsLoop(){
-
-    Object.keys(rooms).forEach((roomID)=>{
-
-        if (!rooms[roomID]) return;
-        if (!rooms[roomID].isDirty) return;
-        io.to(roomID).emit("update-other-user-code", rooms[roomID].dirtyUsers);
-
-        rooms[roomID].dirtyUsers = {}; //delete all dirtyUsers
-        rooms[roomID].isDirty = false;
-
-    })
-    
-    await wait(1500);
-    dirtyRoomsLoop();
-
-}
-dirtyRoomsLoop();
-
 function wait (waitTime){
 
     return new Promise(resolve => setTimeout(resolve, waitTime))
 
 }
 
+const loopedFunctions = [
+{
+    task: ()=> roomCleanUp(),
+    counter: 0,
+    limit: 1
+},
+{
+    task: ()=> serverTokenHandler.checkExpiringTokens(),
+    counter: 0,
+    limit: 60*10
+},
+{
+    task: ()=> roomEventsHandler.updateRoomCode(io, serverRoomHandler),
+    counter: 0,
+    limit: 2
+},
+{
+    task: ()=> roomMessageRate(),
+    counter: 0,
+    limit: 1.5
+},
+{
+    task: ()=> emitRoomUserCode(),
+    counter: 0,
+    limit: 1
+}
+]
 
+function loopThroughTasks(){
+    for (let i = 0; i < loopedFunctions.length; i++){
+        const loopedFunction = loopedFunctions[i];
+
+        loopedFunction.counter+= 0.5;
+
+        if (loopedFunction.counter>=loopedFunction.limit){
+            loopedFunction.counter = 0;
+            loopedFunction.task();
+        }
+
+    }
+}
+
+setInterval(()=>{
+    loopThroughTasks();
+}, 500);
+
+/*
 setInterval(() => {
     const memory = process.memoryUsage();
 
@@ -636,4 +443,4 @@ setInterval(() => {
         external: `${(memory.external / 1024 / 1024).toFixed(2)} MB`
     });
 
-}, 5000);
+}, 5000);*/

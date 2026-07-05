@@ -2,38 +2,41 @@
  * Registers all Socket.IO events related to user tokens.
  *
  * This module communicates with clients and delegates
- * token manipulation to tokenHandler.
+ * token manipulation to the tokenHandler.
  */
 
-async function tokenEventsHandler(io, socket, serverTokensHandler){
+async function tokenEventsHandler(io, socket, serverTokenHandler){
 
     socket.on("connection-protocol", (givenToken)=>{
 
-        const foundToken = serverTokensHandler.getToken(givenToken);
+        const foundToken = serverTokenHandler.getToken(givenToken);
         if (!foundToken){
             socket.emit("invalid-token");
             return;
         }
 
         socket.emit("existing-token", foundToken.username);
+
+        //socket variables to acccess from all
         socket.data.token = givenToken;
         socket.data.username = foundToken.username;
-        socket.data.roomID = null; //move to room handler later
-        serverTokensHandler.setTokenActivity(givenToken, null); //removes it from token deletion process
-        serverTokensHandler.addSocketToToken(givenToken, socket.id);
+        socket.data.roomCode = null;
+
+        serverTokenHandler.setTokenActivity(givenToken, null); //removes it from token deletion process
+        serverTokenHandler.addSocketToToken(givenToken, socket.id);
 
     })
 
     socket.on("create-user", (username)=>{
 
-        const validUsername = validateUsername(username, serverTokensHandler);
+        const validUsername = validateUsername(username, serverTokenHandler);
         if(!validUsername.success) {
             socket.emit("invalid-username", validUsername.message);
             return;
         }
 
-        const newTokenID = serverTokensHandler.generateTokenID();
-        serverTokensHandler.createToken(username, newTokenID, socket.id);
+        const newTokenID = serverTokenHandler.generateTokenID();
+        serverTokenHandler.createToken(username, newTokenID, socket.id);
         
         socket.data.token = newTokenID;
         socket.data.username = username;
@@ -44,19 +47,11 @@ async function tokenEventsHandler(io, socket, serverTokensHandler){
 
     socket.on("log-user-out", ()=>{
 
-        const foundToken = serverTokensHandler.getToken(socket.data.token);
+        const foundToken = serverTokenHandler.getToken(socket.data.token);
         if (!foundToken) return;
-        const tokenSocketsCopy = serverTokensHandler.getSocketsInToken(socket.data.token); //returns COPY of list of sockets in token
-        serverTokensHandler.setTokenLoggedOut(socket.data.token);
+        const tokenSocketsCopy = serverTokenHandler.getSocketsInToken(socket.data.token); //returns COPY of list of sockets in token
+        serverTokenHandler.setTokenLoggedOut(socket.data.token);
         disconnectTokenSockets(io, socket.data.token, tokenSocketsCopy);
-
-    })
-
-    socket.on("disconnect", ()=>{
-
-        const foundToken = serverTokensHandler.getToken(socket.data.token)
-        if (!foundToken) return;
-        serverTokensHandler.removeSocketFromToken(socket.data.token, socket.id);
 
     })
 }
@@ -82,12 +77,19 @@ function disconnectTokenSockets(io, givenToken, tokenSockets){
 /**
  * 
  * @param {string} username 
- * @param {Object} serverTokensHandler 
+ * @param {Object} serverTokenHandler
  * @returns {Object} Username validation results.
  */
-function validateUsername(username, serverTokensHandler) {
+function validateUsername(username, serverTokenHandler) {
 
     const MAX_LENGTH = 12;
+
+    if (typeof username !== "string") {
+        return {
+            success: false,
+            message: "Invalid username."
+        };
+    }
 
     if (username.length > MAX_LENGTH) {
         return {
@@ -107,7 +109,7 @@ function validateUsername(username, serverTokensHandler) {
             message: "Invalid, username includes spaces."
         };
     }
-    else if (serverTokensHandler.existingUsername(username)) {
+    else if (serverTokenHandler.existingUsername(username)) {
         return {
             success: false,
             message: "Invalid, username is currently in use."

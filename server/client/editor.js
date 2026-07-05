@@ -1,4 +1,4 @@
-import { EditorState } from "https://esm.sh/@codemirror/state";
+import { EditorState } from "@codemirror/state";
 import {
   EditorView,
   keymap,
@@ -6,21 +6,25 @@ import {
   highlightActiveLine,
   highlightActiveLineGutter,
   drawSelection
-} from "https://esm.sh/@codemirror/view";
+} from "@codemirror/view";
+
 import {
   defaultKeymap,
   history,
   historyKeymap,
   indentWithTab
-} from "https://esm.sh/@codemirror/commands";
-import { python } from "https://esm.sh/@codemirror/lang-python";
+} from "@codemirror/commands";
+
+import { python } from "@codemirror/lang-python";
+
 import {
   defaultHighlightStyle,
   syntaxHighlighting,
   HighlightStyle,
   indentUnit
-} from "https://esm.sh/@codemirror/language";
-import { tags } from "https://esm.sh/@lezer/highlight";
+} from "@codemirror/language";
+
+import { tags } from "@lezer/highlight";
 
 const myTheme = HighlightStyle.define([
     {

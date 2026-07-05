@@ -22,7 +22,7 @@ class tokenHandler{
 
         this.tokenExpiryTime = tokenExpiryTime; //hours
         this.tokensLoop = setInterval(()=>{
-            this.#checkExpiringTokens()
+            this.checkExpiringTokens()
         }, tokensLoopInterval*milisecondConvertion); //looped in hours conversion
 
     }
@@ -32,11 +32,9 @@ class tokenHandler{
      * @param {string} givenToken 
      * @returns {Object|undefined}
      */
-
     getToken(givenToken) {
         return this.tokens[givenToken];
     }
-
 
     /**
      * 
@@ -84,6 +82,7 @@ class tokenHandler{
     }
 
     /**
+     * 
      * @param {string} username 
      * @param {string} newTokenID 
      * @param {string} socketID 
@@ -131,13 +130,13 @@ class tokenHandler{
         if (token.manualLogOut && token.sockets.length === 0){
             delete this.usernames[token.username];
             delete this.tokens[givenToken];
+            return;
+        }
+
+        if (token.sockets.length === 0){
+            token.lastLoggedOn = Date.now();
         }
     }
-
-    /**
-     * 
-     * @returns {string} tokenID
-     */
 
     generateTokenID(){
         let newTokenID;
@@ -147,7 +146,7 @@ class tokenHandler{
         return newTokenID;
     }
 
-    #checkExpiringTokens(){
+    checkExpiringTokens(){
 
         const expiryTime = this.tokenExpiryTime * milisecondConvertion; // converting hours to miliseconds
         const currentTime = Date.now();
@@ -165,6 +164,29 @@ class tokenHandler{
             }
         });
 
+    }
+
+    /*Room related*/
+    addCreatedRoomAmountToToken(givenToken){
+
+        const token = this.tokens[givenToken];
+        if (!token) return;
+        token.createdRooms ++;
+
+    }
+
+    subtractCreatedRoomsFromToken(givenToken){
+
+        const token = this.tokens[givenToken];
+        if (!token) return;
+        token.createdRooms = Math.max(0, token.createdRooms - 1);        
+
+    }
+
+    addRoomToToken(givenToken, roomCode){
+        const token = this.tokens[givenToken];
+        if (!token) return;
+        token.rooms.push(roomCode);
     }
 
 }
