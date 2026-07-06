@@ -148,7 +148,7 @@ Things I am thinking of adding later on (not soon):
 
 ## Encapsulation - 26/6/26
 
-I started understanding encapsulation more when I was working on Baklafy. This project made me really think about the systems that was going to be use and how each function would interact with each other. Although this wasn't where it fully clicked, it happened while refactoring my code on this project from one large monolithic file into separate handler classes/modules.
+I started understanding encapsulation more when I was working on Baklafy. This project made me really think about the systems that was going to be in use and how each function would interact with each other. Although this wasn't where it fully clicked, it happened while refactoring my code on this project from one large monolithic file into separate handler classes/modules.
 
 Before, a lot of my server logic directly accessed and modified shared objects like rooms, tokens, users, and sockets from different parts of the code. This worked, but it made the system harder to reason about because many parts of the program could change the same data directly. Adding new features was also a headache, as I had to scroll through hundreds of lines of code across a single index.js file. I had an enormouse spagetti of code.
 
