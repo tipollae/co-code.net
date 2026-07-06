@@ -133,12 +133,12 @@ Current protections include:
 
 # 🔨 Currently in progress
 * Persistent coding editors in rooms after abrupt disconnect.
+* Patch updating: Optimization problem is that packets current emit the whole string of code once a change in a users codebase has been detected. Patch updating will allow udpates to only include characters that have changed or have been deleted, increasing performance durastically and lowering the size of data in a payload.
 
 # ➕ Potential Features
 
 Things I am thinking of adding later on (not soon):
 
-* Patch updating: Optimization problem is that packets current emit the whole string of code once a change in a users codebase has been detected. Patch updating will allow udpates to only include characters that have changed or have been deleted, increasing performance durastically and lowering the size of data in a payload.
 * JSON file question system: Using existing coding questions from Leetcode that are available on GitHub, a system could be made for the room host to import existing questions or their own.
 * Room commands for host.
 * Accounts and guest accounts.
