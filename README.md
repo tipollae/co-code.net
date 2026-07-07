@@ -128,10 +128,10 @@ Current protections include:
 * Rate limiting: There are now timers set to calculate whether a user is spamming the chat/code emitting.
 * Refactoring: Monolith -> Modular.
 * Class encapsulation (Room handler, Token handler)
-* Socket.IO middleware
 * Single loop scheduler instead of multiple setInterval()'s
 
 # 🔨 Currently in progress
+* Socket.IO middleware
 * Persistent coding editors in rooms after abrupt disconnect.
 * Patch updating: Optimization problem is that packets current emit the whole string of code once a change in a users codebase has been detected. Patch updating will allow udpates to only include characters that have changed or have been deleted, increasing performance drastically and lowering the size of data in a payload.
 
