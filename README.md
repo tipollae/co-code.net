@@ -154,7 +154,7 @@ Before, a lot of my server logic directly accessed and modified shared objects l
 
 The reason why this concept started making sense was most likely due to the fact that co-code.net already had all the systems lying around. All I had to do was decide which responsibilities belonged to which handler. From there it was just a bunch of puzzle pieces that needed organizing. In comparison, Baklafy was a fresh project. I was already overwhelmed and overthinking the system without even adding the essential parts of the system yet.
 
-Encapsulation helped me realize that each system should own its own data and expose controlled methods for interacting with it. For example, instead of other parts of the code directly changing room data in the rooms object, the room handler can provide methods like createRoom(), getRoom(), updateRoom(), or deleteRoom(). This keeps the logic for managing rooms inside one place.
+Encapsulation helped me realize that each system should own its own data and expose controlled methods for interacting with it. For example, instead of other parts of the code directly changing room data in the rooms object, the room handler can provide methods like createRoom(), getRoom(), updateRoom(), or deleteRoom().
 
 This makes the code safer and easier to maintain because changes to room logic only need to happen inside the room handler. It also makes the rest of the server cleaner because other modules do not need to know exactly how rooms are stored internally.
 
