@@ -137,7 +137,7 @@ Current protections include:
 
 # ➕ Potential Features
 
-Things I am thinking of adding later on (not soon):
+Things I am thinking of adding later on:
 
 * JSON file question system: Using existing coding questions from Leetcode that are available on GitHub, a system could be made for the room host to import existing questions or their own.
 * Room commands for host.
