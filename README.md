@@ -89,7 +89,7 @@ The server mainly handles:
 
 # ⚡ Performance Design
 
-Rather than emittinng socket events on every keystroke,
+Rather than emitting socket events on every keystroke,
 causing excessive network traffic and server load.
 
 co-code.net instead uses a dirty flag synchronization system.
@@ -133,7 +133,7 @@ Current protections include:
 
 # 🔨 Currently in progress
 * Persistent coding editors in rooms after abrupt disconnect.
-* Patch updating: Optimization problem is that packets current emit the whole string of code once a change in a users codebase has been detected. Patch updating will allow udpates to only include characters that have changed or have been deleted, increasing performance durastically and lowering the size of data in a payload.
+* Patch updating: Optimization problem is that packets current emit the whole string of code once a change in a users codebase has been detected. Patch updating will allow udpates to only include characters that have changed or have been deleted, increasing performance drastically and lowering the size of data in a payload.
 
 # ➕ Potential Features
 
