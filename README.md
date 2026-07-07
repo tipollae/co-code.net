@@ -158,8 +158,6 @@ Encapsulation helped me realize that each system should own its own data and exp
 
 This makes the code safer and easier to maintain because changes to room logic only need to happen inside the room handler. It also makes the rest of the server cleaner because other modules do not need to know exactly how rooms are stored internally.
 
-I also learned that encapsulation is not just about using classes. It is about controlling access to data and reducing how much the rest of the program depends on internal details. Even if the data is still stored in objects, the important part is that I interact with it through clear methods instead of directly modifying it everywhere.
-
 Overall, encapsulation made me think more about designing systems rather than just writing functions that make things work. It helped me separate responsibilities, reduce messy dependencies, and make my code easier to refactor in the future.
 
 ## Middleware - 30/6/26
