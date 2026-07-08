@@ -20,8 +20,6 @@ self.onmessage = async (event) => {
             raw: (byte) => {
                 const ch = String.fromCharCode(byte);
 
-                console.log("raw byte:", byte, "isRunning:", isRunning)
-
                 if (ch === "\n") {
                     self.postMessage({
                         type: "stdout",
