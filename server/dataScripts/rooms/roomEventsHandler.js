@@ -79,7 +79,9 @@ async function roomEventsHandler(io, socket, serverRoomHandler, serverTokenHandl
         socket.emit("get-room-users", roomUsers);
 
         const isHost = serverRoomHandler.checkIsHost(status.fixedRoomCode, socket.data.token);
-        if (isHost) serverRoomHandler.removeFromDeleteRooms(status.fixedRoomCode) //SOMETHING ELSE serverRoomHandler.clearNoHostTimeout(status.fixedRoomCode);
+        if (isHost) {
+            serverRoomHandler.removeFromDeleteRooms(status.fixedRoomCode);
+        }
 
         await wait(3000);
 
@@ -124,19 +126,12 @@ async function roomEventsHandler(io, socket, serverRoomHandler, serverTokenHandl
 
     socket.on("update-user-code", (givenData)=>{
 
-        console.log('updating process')
-
         const foundRoom = serverRoomHandler.getRoom(socket.data.roomCode);
         if (!foundRoom) return;
-        console.log('passed room check')
         const foundRoomUser = serverRoomHandler.getRoomUser(foundRoom.roomCode, socket.data.token);
         if (!foundRoomUser) return;
-        console.log('passed room user check')
         const validCode = validateSentCode(givenData);
         if (!validCode) return;
-        console.log('passed valid code check')
-
-        console.log('passed checks')
 
         serverRoomHandler.updateRoom({
             givenRoomCode: socket.data.roomCode, 
@@ -144,8 +139,6 @@ async function roomEventsHandler(io, socket, serverRoomHandler, serverTokenHandl
             token: socket.data.token,
             givenData: givenData
         })
-
-        console.log(foundRoom.otherUserCode[socket.id])
 
     })
 
@@ -157,20 +150,19 @@ function updateRoomCode(io, serverRoomHandler){
 
         const dirtyRoom = serverRoomHandler.dirtyRooms[roomCode];
         if (!dirtyRoom) return;
-        console.log(dirtyRoom.dirtyUsers)
         io.to(roomCode).emit("update-other-user-code", dirtyRoom.dirtyUsers);
         serverRoomHandler.deleteDirtyUsers(roomCode);
-        serverRoomHandler.deleteDirtyRoom(roomCode);
-        console.log('clean room')
 
     })
+
+    serverRoomHandler.clearAllDirtyRooms();
 
 }
 
 function validateSentCode(givenData){
 
         if (!givenData || typeof givenData.code !== "string") return false;
-        if (givenData.code.length > 10000) {console.log("tooo big"); return false}
+        if (givenData.code.length > 10000) return false;
         return true;
 
 }

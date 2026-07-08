@@ -64,7 +64,7 @@ class roomHandler{
     getRoom(givenRoomCode){
 
         const room = this.rooms[givenRoomCode];
-        if (!room) return console.error("Invalid room code");;
+        if (!room) return false;
         return room;
 
     }
@@ -100,7 +100,7 @@ class roomHandler{
     createRoomUser(data){
 
         const room = this.getRoom(data.roomCode)
-        if (!room) return console.error("Invalid room code");
+        if (!room) return false;
 
         room.users[data.token] = {
 
@@ -115,7 +115,7 @@ class roomHandler{
     deleteRoomUser(givenRoomCode, givenToken, socketID){
 
         const room = this.getRoom(givenRoomCode)
-        if (!room) return console.error("Invalid room code");
+        if (!room) return false;
 
         delete room.dirtyUsers[socketID];
         delete room.otherUserCode[socketID];
@@ -126,7 +126,7 @@ class roomHandler{
     getRoomUsers(givenRoomCode, givenToken){
 
         const room = this.getRoom(givenRoomCode)
-        if (!room) return console.error("Invalid room code");;
+        if (!room) return false;
 
         const usersList = [];
         Object.keys(room.users).forEach((userTokenID)=>{
@@ -148,7 +148,7 @@ class roomHandler{
     getRoomUser(givenRoomCode, givenToken){
 
         const room = this.getRoom(givenRoomCode);
-        if (!room) return console.error("Invalid room code");;
+        if (!room) return false;
         return room.users[givenToken];
 
     }
@@ -176,7 +176,7 @@ class roomHandler{
         this.roomsToDelete[room.roomCode] = {
 
             counter: 0,
-            limit: 10 //seconds
+            limit: 30 //seconds
 
         }
 
@@ -198,7 +198,7 @@ class roomHandler{
     getRoomToDelete(givenRoomCode){
 
         const deleteRoom = this.roomsToDelete[givenRoomCode];
-        if (!deleteRoom) return console.error("Invalid room code");
+        if (!deleteRoom) return false;
         return deleteRoom;
 
     }
@@ -219,6 +219,11 @@ class roomHandler{
 
         delete this.dirtyRooms[givenRoomCode];
 
+    }
+
+    clearAllDirtyRooms(){
+        this.dirtyRooms = {};
+        return true;
     }
 
     deleteDirtyUsers(givenRoomCode){

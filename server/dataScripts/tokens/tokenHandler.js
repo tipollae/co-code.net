@@ -159,7 +159,6 @@ class tokenHandler{
 
                 delete this.usernames[token.username];
                 delete this.tokens[tokenID];
-                console.log('delete token');
 
             }
         });

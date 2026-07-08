@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "build-editor": "esbuild ./client/editor.js --bundle --format=esm --outfile=../public/scripts/editor.bundle.js"
+  },
   "dependencies": {
     "@codemirror/commands": "^6.10.4",
     "@codemirror/lang-python": "^6.2.1",

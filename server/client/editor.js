@@ -78,8 +78,8 @@ const roomCode = String(window.location.href.split("#")[1])
 
 const state = EditorState.create({
     doc: `#people in the room can see what you code here
-
 #room code: ${roomCode}
+
 print("hello world")`,
   extensions: [
     lineNumbers(),
@@ -107,7 +107,48 @@ print("hello world")`,
 
 const state2 = EditorState.create({
     doc: `#woah, another code editor!
-print('im feeling so gassy *farts cutely*')`,
+
+def binarySearch(givenList, target):
+
+    left = 0
+    right = len(givenList)-1
+    loops = 0
+
+    while left <= right:
+
+        middle = (left+right)//2
+        loops += 1
+
+        if givenList[middle] == target:
+            return {
+                "target": target, 
+                "middle": middle,
+                "foundValue": givenList[middle],
+                "loops": loops
+            }
+
+        elif givenList[middle] > target:
+            right = middle - 1
+
+        elif givenList[middle] < target:
+            left = middle + 1
+            
+    return {
+        "target": target, 
+        "middle": None,
+        "foundValue": None,
+        "loops": loops
+    }
+
+numsList = [1,2,3,4,5,6,7,10,20]
+search = binarySearch(numsList, 6)
+
+print(f"""
+target value: {search['target']}
+list[{search['middle']}]: {search['foundValue']}
+loops: {search['loops']}
+""")
+`,
     extensions: [
         lineNumbers(),
         highlightActiveLineGutter(),
