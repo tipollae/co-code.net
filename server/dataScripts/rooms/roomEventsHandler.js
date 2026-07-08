@@ -2,7 +2,6 @@
 async function roomEventsHandler(io, socket, serverRoomHandler, serverTokenHandler){
 
     socket.on("create-room", ()=>{
-
         const foundToken = serverTokenHandler.getToken(socket.data.token);
         if (!foundToken){
             socket.emit("invalid-token");
@@ -15,19 +14,19 @@ async function roomEventsHandler(io, socket, serverRoomHandler, serverTokenHandl
         }
 
         const newRoomCode = serverRoomHandler.generateRoomCode(4);
+
         serverRoomHandler.createRoom({
             roomCode: newRoomCode,
             username: socket.data.username,
             token: socket.data.token,
         });
+        
         socket.emit("valid-room", newRoomCode);
         serverTokenHandler.addCreatedRoomAmountToToken(socket.data.token);// +1 to token.createdRooms in token handler.
-
     });
 
     //event when user is checking room code
     socket.on("join-room", (givenRoomCode)=>{
-
         const foundToken = serverTokenHandler.getToken(socket.data.token);
         if (!foundToken){
             socket.emit("invalid-token");
@@ -41,12 +40,10 @@ async function roomEventsHandler(io, socket, serverRoomHandler, serverTokenHandl
         }
 
         socket.emit("valid-room", status.fixedRoomCode);
-
     });
 
     //event when user is knocking on room
     socket.on("validate-room-entrance", async (givenRoomCode)=>{
-
         const foundToken = serverTokenHandler.getToken(socket.data.token);
         if (!foundToken){
             socket.emit("invalid-token");
@@ -93,11 +90,9 @@ async function roomEventsHandler(io, socket, serverRoomHandler, serverTokenHandl
             "update-other-user-code",
             otherUserCode
         );
-
     });
 
     socket.on("send-message", (givenMessage)=>{
-
         const MESSAGE_AMOUNT_LIMIT = 10;
         const MESSAGE_LENGTH_LIMIT = 800;
 
@@ -121,11 +116,9 @@ async function roomEventsHandler(io, socket, serverRoomHandler, serverTokenHandl
 
         io.to(socket.data.roomCode).emit("emit-message-to-all", socket.data.username, givenMessage);
         foundRoomUser.messagesSent ++;
-
     })
 
     socket.on("update-user-code", (givenData)=>{
-
         const foundRoom = serverRoomHandler.getRoom(socket.data.roomCode);
         if (!foundRoom) return;
         const foundRoomUser = serverRoomHandler.getRoomUser(foundRoom.roomCode, socket.data.token);
@@ -139,7 +132,6 @@ async function roomEventsHandler(io, socket, serverRoomHandler, serverTokenHandl
             token: socket.data.token,
             givenData: givenData
         })
-
     })
 
 }

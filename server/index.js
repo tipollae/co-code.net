@@ -59,9 +59,8 @@ io.on("connection", (socket)=>{
 
     socket.on("disconnect", ()=>{
 
-        const foundToken = serverTokenHandler.getToken(socket.data.token)
+        const foundToken = serverTokenHandler.getToken(socket.data.token);
         if (!foundToken) return;
-        console.log(socket.data.roomCode);
         if (socket.data.roomCode){
 
             const foundRoom = serverRoomHandler.getRoom(socket.data.roomCode);
@@ -70,7 +69,6 @@ io.on("connection", (socket)=>{
             serverRoomHandler.deleteRoomUser(socket.data.roomCode, socket.data.token, socket.id);
             if (serverRoomHandler.checkIsHost(socket.data.roomCode, socket.data.token)){
                 io.to(foundRoom.roomCode).emit("host-left");
-                console.log("host left room")
                 serverRoomHandler.addToDeleteRooms(socket.data.roomCode);
             }
 
