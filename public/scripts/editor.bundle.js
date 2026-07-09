@@ -20473,6 +20473,10 @@ print("hello world")`,
           return true;
         }
       },
+      {
+        key: "Shift-Tab",
+        run: indentLess
+      },
       ...defaultKeymap,
       ...historyKeymap
     ]),
@@ -20540,6 +20544,10 @@ loops: {search['loops']}
           view3.dispatch(view3.state.replaceSelection("    "));
           return true;
         }
+      },
+      {
+        key: "Shift-Tab",
+        run: indentLess
       },
       ...defaultKeymap,
       ...historyKeymap

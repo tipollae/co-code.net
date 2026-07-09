@@ -12,6 +12,7 @@ import {
   defaultKeymap,
   history,
   historyKeymap,
+  indentLess
 } from "@codemirror/commands";
 
 import { python } from "@codemirror/lang-python";
@@ -97,6 +98,10 @@ print("hello world")`,
                 return true;
             }
         },
+        {
+            key: "Shift-Tab",
+            run: indentLess
+        },
       ...defaultKeymap,
       ...historyKeymap
     ]),
@@ -170,6 +175,10 @@ loops: {search['loops']}
                     view.dispatch(view.state.replaceSelection("    "));
                     return true;
                 }
+            },
+            {
+                key: "Shift-Tab",
+                run: indentLess
             },
             ...defaultKeymap,
             ...historyKeymap
