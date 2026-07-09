@@ -20469,8 +20469,12 @@ print("hello world")`,
       {
         key: "Tab",
         run(view3) {
-          view3.dispatch(view3.state.replaceSelection("    "));
-          return true;
+          const { from, to } = view3.state.selection.main;
+          if (from === to) {
+            view3.dispatch(view3.state.replaceSelection("    "));
+            return true;
+          }
+          return indentMore(view3);
         }
       },
       {
@@ -20541,8 +20545,12 @@ loops: {search['loops']}
       {
         key: "Tab",
         run(view3) {
-          view3.dispatch(view3.state.replaceSelection("    "));
-          return true;
+          const { from, to } = view3.state.selection.main;
+          if (from === to) {
+            view3.dispatch(view3.state.replaceSelection("    "));
+            return true;
+          }
+          return indentMore(view3);
         }
       },
       {

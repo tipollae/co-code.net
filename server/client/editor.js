@@ -9,10 +9,11 @@ import {
 } from "@codemirror/view";
 
 import {
-  defaultKeymap,
-  history,
-  historyKeymap,
-  indentLess
+    defaultKeymap,
+    history,
+    historyKeymap,
+    indentMore,
+    indentLess
 } from "@codemirror/commands";
 
 import { python } from "@codemirror/lang-python";
@@ -94,8 +95,16 @@ print("hello world")`,
         {
             key: "Tab",
             run(view) {
-                view.dispatch(view.state.replaceSelection("    "));
-                return true;
+                const { from, to } = view.state.selection.main;
+
+                // No text selected
+                if (from === to) {
+                    view.dispatch(view.state.replaceSelection("    "));
+                    return true;
+                }
+
+                // Text selected -> indent normally
+                return indentMore(view);
             }
         },
         {
@@ -172,8 +181,16 @@ loops: {search['loops']}
             {
                 key: "Tab",
                 run(view) {
-                    view.dispatch(view.state.replaceSelection("    "));
-                    return true;
+                    const { from, to } = view.state.selection.main;
+
+                    // No text selected
+                    if (from === to) {
+                        view.dispatch(view.state.replaceSelection("    "));
+                        return true;
+                    }
+
+                    // Text selected -> indent normally
+                    return indentMore(view);
                 }
             },
             {
