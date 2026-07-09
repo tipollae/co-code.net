@@ -84,10 +84,7 @@ async function roomEventsHandler(io, socket, serverRoomHandler, serverTokenHandl
         if (!foundRoom) return;
         const otherUserCode = serverRoomHandler.getOtherUserCode(status.fixedRoomCode);
 
-        io.to(status.fixedRoomCode).emit(
-            "update-other-user-code",
-            otherUserCode
-        );
+        io.to(status.fixedRoomCode).emit("update-other-user-code", otherUserCode);
     });
 
     socket.on("send-message", (givenMessage)=>{

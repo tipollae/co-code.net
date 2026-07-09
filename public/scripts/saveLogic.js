@@ -6,7 +6,7 @@ const ROOM_DATA_EXPIRY = 1000 * 60 * 3;
 let localRoomsData = JSON.parse(localStorage.getItem("localRoomsData") || "{}");
 
 Object.keys(localRoomsData).forEach(loopedRoomCode => {
-    if (Date.now() - localRoomsData[loopedRoomCode].dateCreated >= ROOM_DATA_EXPIRY) {
+    if (Date.now() - localRoomsData[loopedRoomCode].lastSaved >= ROOM_DATA_EXPIRY) {
         delete localRoomsData[loopedRoomCode];
     }
 });
@@ -56,7 +56,7 @@ function saveRoomCode() {
         tab2: {
             content: editor2.state.doc.toString()
         },
-        dateCreated: Date.now()
+        lastSaved: Date.now(),
     };
 
     localStorage.setItem("localRoomsData", JSON.stringify(localRoomsData));
@@ -76,11 +76,3 @@ function stopSaveLoop() {
 }
 
 startSaveLoop();
-
-document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-        stopSaveLoop();
-    } else {
-        startSaveLoop();
-    }
-});
