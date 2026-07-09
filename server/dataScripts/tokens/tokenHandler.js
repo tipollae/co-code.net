@@ -120,8 +120,6 @@ class tokenHandler{
         const foundSocket = token.sockets[socketID];
         if (!foundSocket) return;
         delete token.sockets[socketID];
-        console.log("test")
-        console.log(token.sockets)
 
         if (token.manualLogOut && Object.keys(token.sockets).length === 0){
             delete this.usernames[token.username];
@@ -155,8 +153,6 @@ class tokenHandler{
 
                 delete this.usernames[token.username];
                 delete this.tokens[tokenID];
-                console.log('delete token')
-
             }
         });
 
