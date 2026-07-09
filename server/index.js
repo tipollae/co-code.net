@@ -59,6 +59,8 @@ io.on("connection", (socket)=>{
 
     socket.on("disconnect", ()=>{
 
+        serverTokenHandler.removeSocketFromToken(socket.data.token, socket.id);
+
         const foundToken = serverTokenHandler.getToken(socket.data.token);
         if (!foundToken) return;
         if (socket.data.roomCode){
@@ -76,8 +78,6 @@ io.on("connection", (socket)=>{
             io.to(foundRoom.roomCode).emit("user-left-room", socket.id, socket.data.username);
 
         }
-
-        serverTokenHandler.removeSocketFromToken(socket.data.token, socket.id);
 
     })
 
@@ -206,7 +206,7 @@ const loopedFunctions = [
 {
     task: ()=> serverTokenHandler.checkExpiringTokens(),
     counter: 0,
-    limit: 60*10
+    limit: 2
 },
 {
     task: ()=> roomEventsHandler.updateRoomCode(io, serverRoomHandler),
@@ -235,7 +235,6 @@ function loopThroughTasks(){
             loopedFunction.counter = 0;
             loopedFunction.task();
         }
-
     }
 }
 

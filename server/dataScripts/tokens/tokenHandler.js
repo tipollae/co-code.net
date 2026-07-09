@@ -16,15 +16,10 @@ const milisecondConvertion = 3600000;
 class tokenHandler{
 
     constructor (tokensLoopInterval, tokenExpiryTime){
-
         this.tokens = {};
         this.usernames = {};
 
         this.tokenExpiryTime = tokenExpiryTime; //hours
-        this.tokensLoop = setInterval(()=>{
-            this.checkExpiringTokens()
-        }, tokensLoopInterval*milisecondConvertion); //looped in hours conversion
-
     }
 
     /**
@@ -55,8 +50,8 @@ class tokenHandler{
         const token = this.getToken(givenToken);
         if (!token) return;
 
-        if (!token.sockets.includes(socketID)) {
-            token.sockets.push(socketID);
+        if (!token.sockets[socketID]) {
+            token.sockets[socketID] = true;
         }
     }
 
@@ -91,8 +86,7 @@ class tokenHandler{
 
         this.tokens[newTokenID] = {
             username: username,
-            sockets: [socketID],
-            rooms: [],
+            sockets: { [socketID]:true },
             createdRooms: 0,
             lastLoggedOn: null,
             manualLogOut: false,
@@ -105,12 +99,12 @@ class tokenHandler{
     /**
      * Returns a copy of active socket IDs in a token.
      * @param {string} givenToken 
-     * @returns {string[]} sockets
+     * @returns {Object} sockets
      */
     getSocketsInToken(givenToken){
         const token = this.getToken(givenToken);
-        if (!token) return [];
-        return [...token.sockets];
+        if (!token) return {};
+        return { ...token.sockets };
     }
 
     /**
@@ -123,17 +117,19 @@ class tokenHandler{
     removeSocketFromToken(givenToken, socketID){
         const token = this.getToken(givenToken);
         if (!token) return;
-        const foundSocketIndex = token.sockets.indexOf(socketID);
-        if (foundSocketIndex === -1) return;
-        token.sockets.splice(foundSocketIndex, 1);
+        const foundSocket = token.sockets[socketID];
+        if (!foundSocket) return;
+        delete token.sockets[socketID];
+        console.log("test")
+        console.log(token.sockets)
 
-        if (token.manualLogOut && token.sockets.length === 0){
+        if (token.manualLogOut && Object.keys(token.sockets).length === 0){
             delete this.usernames[token.username];
             delete this.tokens[givenToken];
             return;
         }
 
-        if (token.sockets.length === 0){
+        if (Object.keys(token.sockets).length === 0){
             token.lastLoggedOn = Date.now();
         }
     }
@@ -159,6 +155,7 @@ class tokenHandler{
 
                 delete this.usernames[token.username];
                 delete this.tokens[tokenID];
+                console.log('delete token')
 
             }
         });
@@ -181,13 +178,6 @@ class tokenHandler{
         token.createdRooms = Math.max(0, token.createdRooms - 1);        
 
     }
-
-    addRoomToToken(givenToken, roomCode){
-        const token = this.tokens[givenToken];
-        if (!token) return;
-        token.rooms.push(roomCode);
-    }
-
 }
 
 module.exports = {tokenHandler}

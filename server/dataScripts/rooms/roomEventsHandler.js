@@ -67,8 +67,6 @@ async function roomEventsHandler(io, socket, serverRoomHandler, serverTokenHandl
             username: socket.data.username
         });
 
-        serverTokenHandler.addRoomToToken(socket.data.token, status.fixedRoomCode);
-
         socket.to(status.fixedRoomCode).emit("other-user-joined", socket.data.username, socket.id);
         socket.emit("server-message", `Welcome ${socket.data.username}, to room ${socket.data.roomCode} :D`);
 

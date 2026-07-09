@@ -49,11 +49,11 @@ async function tokenEventsHandler(io, socket, serverTokenHandler){
 
         const foundToken = serverTokenHandler.getToken(socket.data.token);
         if (!foundToken) return;
-        const tokenSocketsCopy = serverTokenHandler.getSocketsInToken(socket.data.token); //returns COPY of list of sockets in token
+        const tokenSocketsCopy = serverTokenHandler.getSocketsInToken(socket.data.token); //returns COPY of objects of sockets in token
         serverTokenHandler.setTokenLoggedOut(socket.data.token);
-        disconnectTokenSockets(io, socket.data.token, tokenSocketsCopy);
+        disconnectTokenSockets(io, tokenSocketsCopy);
 
-    })
+    });
 }
 
 /**
@@ -64,14 +64,12 @@ async function tokenEventsHandler(io, socket, serverTokenHandler){
  * @param {string[]} tokenSockets 
  */
 
-function disconnectTokenSockets(io, givenToken, tokenSockets){
-
-    for (let i = 0; i < tokenSockets.length; i++){
-        const foundSocket = io.sockets.sockets.get(tokenSockets[i]);
-        if (!foundSocket) continue;
+function disconnectTokenSockets(io, tokenSockets){
+    Object.keys(tokenSockets).forEach(socketID=>{
+        const foundSocket = io.sockets.sockets.get(socketID);
+        if (!foundSocket) return;
         foundSocket.disconnect(true);
-    }
-
+    })
 }
 
 /**
