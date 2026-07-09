@@ -6,6 +6,12 @@ const ROOM_DATA_EXPIRY = 1000 * 60 * 3;
 let localRoomsData = JSON.parse(localStorage.getItem("localRoomsData") || "{}");
 
 Object.keys(localRoomsData).forEach(loopedRoomCode => {
+
+    if (!localRoomsData[loopedRoomCode].lastSaved) {
+        delete localRoomsData[loopedRoomCode];
+        return;
+    }
+
     if (Date.now() - localRoomsData[loopedRoomCode].lastSaved >= ROOM_DATA_EXPIRY) {
         delete localRoomsData[loopedRoomCode];
     }
