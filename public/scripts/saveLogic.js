@@ -3,18 +3,20 @@ let saveLoop = null;
 const roomCode = String(window.location.href.split("#")[1]);
 const ROOM_DATA_EXPIRY = 1000 * 60 * 3;
 
-let localRoomsData = JSON.parse(localStorage.getItem("localRoomsData") || "{}");
+let localRoomsData = JSON.parse(localStorage.getItem(`room_${roomCode}`) || "{}");
+localStorage.setItem(`room_${roomCode}`, JSON.stringify(localRoomsData));
 
-Object.keys(localRoomsData).forEach(loopedRoomCode => {
-    
-    if (loopedRoomCode === roomCode) return;
+Object.keys(localStorage).forEach(key => {
+    if (!key.startsWith("room_")) return;
 
-    if (Date.now() - localRoomsData[loopedRoomCode].lastSaved >= ROOM_DATA_EXPIRY) {
-        delete localRoomsData[loopedRoomCode];
+    const room = JSON.parse(localStorage.getItem(key) || "null");
+
+    if (!room ||
+        !room.lastSaved ||
+        Date.now() - room.lastSaved >= ROOM_DATA_EXPIRY) {
+        localStorage.removeItem(key);
     }
 });
-
-localStorage.setItem("localRoomsData", JSON.stringify(localRoomsData));
 
 function saveRoomCode() {
     const editor1 = window.editorView1;
@@ -22,7 +24,7 @@ function saveRoomCode() {
 
     if (!editor1 || !editor2) return;
 
-    localRoomsData[roomCode] = {
+    localRoomsData = {
         tab1: {
             content: editor1.state.doc.toString()
         },
@@ -32,7 +34,7 @@ function saveRoomCode() {
         lastSaved: Date.now(),
     };
 
-    localStorage.setItem("localRoomsData", JSON.stringify(localRoomsData));
+    localStorage.setItem(`room_${roomCode}`, JSON.stringify(localRoomsData));
 }
 
 function startSaveLoop() {
