@@ -207,3 +207,22 @@ if (view2){
 
 window.editorView1 = view;
 window.editorView2 = view2;
+
+let localRoomsData = JSON.parse(localStorage.getItem("localRoomsData") || "{}");
+if (localRoomsData[roomCode]){
+    view.dispatch({
+        changes: {
+            from: 0,
+            to: view.state.doc.length,
+            insert: localRoomsData[roomCode].tab1.content
+        }
+    });
+
+    view2.dispatch({
+        changes: {
+            from: 0,
+            to: view2.state.doc.length,
+            insert: localRoomsData[roomCode].tab2.content
+        }
+    });
+}

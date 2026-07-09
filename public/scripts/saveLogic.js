@@ -19,36 +19,6 @@ Object.keys(localRoomsData).forEach(loopedRoomCode => {
 
 localStorage.setItem("localRoomsData", JSON.stringify(localRoomsData));
 
-let loadInterval = setInterval(() => {
-    const editor1 = window.editorView1;
-    const editor2 = window.editorView2;
-
-    if (!editor1 || !editor2) return;
-    if (!localRoomsData[roomCode]){
-        clearInterval(loadInterval);
-        loadInterval = null;
-        return;
-    }
-
-    editor1.dispatch({
-        changes: {
-            from: 0,
-            to: editor1.state.doc.length,
-            insert: localRoomsData[roomCode].tab1.content
-        }
-    });
-
-    editor2.dispatch({
-        changes: {
-            from: 0,
-            to: editor2.state.doc.length,
-            insert: localRoomsData[roomCode].tab2.content
-        }
-    });
-    clearInterval(loadInterval);
-    loadInterval = null;
-}, 500);
-
 function saveRoomCode() {
     const editor1 = window.editorView1;
     const editor2 = window.editorView2;
