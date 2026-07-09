@@ -129,10 +129,10 @@ Current protections include:
 * Refactoring: Monolith -> Modular.
 * Class encapsulation (Room handler, Token handler)
 * Single loop scheduler instead of multiple setInterval()'s
+* Persistent coding editors in rooms after abrupt disconnect.
 
 # 🔨 Currently in progress
 * Socket.IO middleware
-* Persistent coding editors in rooms after abrupt disconnect.
 * Patch updating: Optimization problem is that packets current emit the whole string of code once a change in a users codebase has been detected. Patch updating will allow udpates to only include characters that have changed or have been deleted, increasing performance drastically and lowering the size of data in a payload.
 
 # ➕ Potential Features
