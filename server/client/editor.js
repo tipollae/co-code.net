@@ -12,7 +12,6 @@ import {
   defaultKeymap,
   history,
   historyKeymap,
-  indentWithTab
 } from "@codemirror/commands";
 
 import { python } from "@codemirror/lang-python";
@@ -91,7 +90,13 @@ print("hello world")`,
     limitCodeLength,
 
     keymap.of([
-      indentWithTab,
+        {
+            key: "Tab",
+            run(view) {
+                view.dispatch(view.state.replaceSelection("    "));
+                return true;
+            }
+        },
       ...defaultKeymap,
       ...historyKeymap
     ]),
@@ -159,7 +164,13 @@ loops: {search['loops']}
         limitCodeLength,
 
         keymap.of([
-            indentWithTab,
+            {
+                key: "Tab",
+                run(view) {
+                    view.dispatch(view.state.replaceSelection("    "));
+                    return true;
+                }
+            },
             ...defaultKeymap,
             ...historyKeymap
         ]),

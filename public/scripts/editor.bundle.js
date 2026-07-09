@@ -17502,7 +17502,6 @@ var defaultKeymap = /* @__PURE__ */ [
   { key: "Alt-A", run: toggleBlockComment },
   { key: "Ctrl-m", mac: "Shift-Alt-m", run: toggleTabFocusMode }
 ].concat(standardKeymap);
-var indentWithTab = { key: "Tab", run: indentMore, shift: indentLess };
 
 // node_modules/@lezer/lr/dist/index.js
 var Stack = class _Stack {
@@ -20467,7 +20466,13 @@ print("hello world")`,
     highlightActiveLine(),
     limitCodeLength,
     keymap.of([
-      indentWithTab,
+      {
+        key: "Tab",
+        run(view3) {
+          view3.dispatch(view3.state.replaceSelection("    "));
+          return true;
+        }
+      },
       ...defaultKeymap,
       ...historyKeymap
     ]),
@@ -20529,7 +20534,13 @@ loops: {search['loops']}
     highlightActiveLine(),
     limitCodeLength,
     keymap.of([
-      indentWithTab,
+      {
+        key: "Tab",
+        run(view3) {
+          view3.dispatch(view3.state.replaceSelection("    "));
+          return true;
+        }
+      },
       ...defaultKeymap,
       ...historyKeymap
     ]),
