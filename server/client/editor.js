@@ -1,4 +1,7 @@
-import { EditorState } from "@codemirror/state";
+import {
+    EditorState,
+    Transaction
+} from "@codemirror/state";
 import {
   EditorView,
   keymap,
@@ -235,20 +238,22 @@ window.editorView1 = view;
 window.editorView2 = view2;
 
 let localRoomsData = JSON.parse(localStorage.getItem(`room_${roomCode}`) || "null");
-if (localRoomsData?.tab1 || localRoomsData?.tab2){
+
+if (localRoomsData?.tab1?.content != null && localRoomsData?.tab1?.content.replaceAll(' ', '') !== "") {
+    restoreDocument(view, localRoomsData.tab1.content);
+}
+
+if (localRoomsData?.tab2?.content != null && localRoomsData?.tab2?.content.replaceAll(' ', '') !== "") {
+    restoreDocument(view2, localRoomsData.tab2.content);
+}
+
+function restoreDocument(view, content) {
     view.dispatch({
         changes: {
             from: 0,
             to: view.state.doc.length,
-            insert: localRoomsData.tab1.content
-        }
-    });
-
-    view2.dispatch({
-        changes: {
-            from: 0,
-            to: view2.state.doc.length,
-            insert: localRoomsData.tab2.content
-        }
+            insert: content
+        },
+        annotations: Transaction.addToHistory.of(false)
     });
 }

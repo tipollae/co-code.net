@@ -60,6 +60,8 @@ socket.on("request-code", ()=>{
 
 socket.on("update-other-user-code", (givenOtherCode)=>{
 
+    console.log("recieved update")
+
     Object.keys(givenOtherCode).forEach((socketID)=>{
 
         localOtherCode[socketID] = givenOtherCode[socketID]

@@ -132,7 +132,6 @@ async function roomEventsHandler(io, socket, serverRoomHandler, serverTokenHandl
 }
 
 function updateRoomCode(io, serverRoomHandler){
-
     Object.keys(serverRoomHandler.dirtyRooms).forEach(roomCode =>{
 
         const dirtyRoom = serverRoomHandler.dirtyRooms[roomCode];
@@ -143,7 +142,6 @@ function updateRoomCode(io, serverRoomHandler){
     })
 
     serverRoomHandler.clearAllDirtyRooms();
-
 }
 
 function validateSentCode(givenData){
