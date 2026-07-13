@@ -20515,7 +20515,7 @@ Keyboard shortcuts I managed to implement cuz I'm cool:
 
 Alt + z: toggleable text-wrapping
 Tab: Indent/add spaces
-Shift + tab: un-indent
+Shift + tab: unindent
 
 Preddy cool eh?
 """

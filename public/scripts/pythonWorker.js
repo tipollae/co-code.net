@@ -65,8 +65,7 @@ self.onmessage = async (event) => {
     if (type === "run") {
         console.log("run code")
         try {
-            const result = await pyodide.runPythonAsync(`
-${code}
+            const result = await pyodide.runPythonAsync(`${code}
 import sys
 sys.stdout.flush()
 `);
