@@ -215,22 +215,40 @@ function switchTab(givenTabID) {
     tab1.classList.remove("active");
     tab2.classList.remove("active");
 
-    currentEditor = null;
+    let editorToActivate = null;
 
     if (givenTabID === "tab1") {
         tab1.classList.add("active");
-        currentEditor = window.editorView1;
+        editorToActivate = window.editorView1;
     } else if (givenTabID === "tab2") {
         tab2.classList.add("active");
-        currentEditor = window.editorView2;
+        editorToActivate = window.editorView2;
     }
+
+    currentEditor = editorToActivate;
 
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-            currentEditor?.requestMeasure();
-            currentEditor?.focus();
+            editorToActivate?.requestMeasure();
+            editorToActivate?.focus();
+
             document.getElementById("tab1Loading").style.display = "none";
             document.getElementById("tab2Loading").style.display = "none";
+        });
+    });
+
+}
+
+
+document.fonts.ready.then(() => {
+    window.editorView1?.requestMeasure();
+    window.editorView2?.requestMeasure();
+});
+
+function refreshEditorMeasurements(editorView) {
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            editorView.requestMeasure();
         });
     });
 }

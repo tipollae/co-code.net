@@ -1,6 +1,7 @@
 import {
     EditorState,
-    Transaction
+    Transaction,
+    Compartment
 } from "@codemirror/state";
 import {
   EditorView,
@@ -32,8 +33,9 @@ import { tags } from "@lezer/highlight";
 
 const myTheme = HighlightStyle.define([
     {
-        tag: tags.string,
-        color: "#f39422"
+        tag: tags.comment,
+        color: "#b4b4b4",
+        fontStyle: "italic" // optional
     },
     {
         tag: tags.keyword,
@@ -58,6 +60,12 @@ const myTheme = HighlightStyle.define([
 ]);
 
 const MAX_CODE_LENGTH = 10000;
+
+const wrapCompartment1 = new Compartment();
+const wrapCompartment2 = new Compartment();
+
+let wrapping1 = false;
+let wrapping2 = false;
 
 const limitCodeLength = EditorView.updateListener.of((update) => {
     if (!update.docChanged) return;
@@ -114,14 +122,27 @@ print("hello world")`,
             key: "Shift-Tab",
             run: indentLess
         },
-      ...defaultKeymap,
-      ...historyKeymap
+        {
+            key: "Alt-z",
+            run(view) {
+                wrapping1 = !wrapping1;
+
+                view.dispatch({
+                    effects: wrapCompartment1.reconfigure(
+                        wrapping1 ? EditorView.lineWrapping : []
+                    )
+                });
+
+                return true;
+            }
+        },
+        ...defaultKeymap,
+        ...historyKeymap
     ]),
 
+    wrapCompartment1.of([]),
     indentUnit.of("    "),
     python(),
-
-    syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
     syntaxHighlighting(myTheme)
   ]
 });
@@ -129,6 +150,15 @@ print("hello world")`,
 
 const state2 = EditorState.create({
     doc: `#woah, another code editor!
+"""
+Keyboard shortcuts I managed to implement cuz I'm cool:
+
+Alt + z: toggleable text-wrapping
+Tab: Indent/add spaces
+Shift + tab: un-indent
+
+Preddy cool eh?
+"""
 
 def binarySearch(givenList, target):
 
@@ -200,14 +230,28 @@ loops: {search['loops']}
                 key: "Shift-Tab",
                 run: indentLess
             },
+            {
+                key: "Alt-z",
+                run(view) {
+                    wrapping2 = !wrapping2;
+
+                    view.dispatch({
+                        effects: wrapCompartment2.reconfigure(
+                            wrapping2 ? EditorView.lineWrapping : []
+                        )
+                    });
+                    
+                    return true;
+                }
+            },
             ...defaultKeymap,
             ...historyKeymap
         ]),
 
+        wrapCompartment2.of([]),
+
         indentUnit.of("    "),
         python(),
-
-        syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
         syntaxHighlighting(myTheme)
     ]
 });

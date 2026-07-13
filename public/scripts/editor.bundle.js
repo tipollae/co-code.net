@@ -20413,8 +20413,10 @@ function python() {
 // client/editor.js
 var myTheme = HighlightStyle.define([
   {
-    tag: tags.string,
-    color: "#f39422"
+    tag: tags.comment,
+    color: "#b4b4b4",
+    fontStyle: "italic"
+    // optional
   },
   {
     tag: tags.keyword,
@@ -20438,6 +20440,10 @@ var myTheme = HighlightStyle.define([
   { tag: tags.punctuation, color: "#58d58d" }
 ]);
 var MAX_CODE_LENGTH = 1e4;
+var wrapCompartment1 = new Compartment();
+var wrapCompartment2 = new Compartment();
+var wrapping1 = false;
+var wrapping2 = false;
 var limitCodeLength = EditorView.updateListener.of((update) => {
   if (!update.docChanged) return;
   const code2 = update.state.doc.toString();
@@ -20481,17 +20487,38 @@ print("hello world")`,
         key: "Shift-Tab",
         run: indentLess
       },
+      {
+        key: "Alt-z",
+        run(view3) {
+          wrapping1 = !wrapping1;
+          view3.dispatch({
+            effects: wrapCompartment1.reconfigure(
+              wrapping1 ? EditorView.lineWrapping : []
+            )
+          });
+          return true;
+        }
+      },
       ...defaultKeymap,
       ...historyKeymap
     ]),
+    wrapCompartment1.of([]),
     indentUnit.of("    "),
     python(),
-    syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
     syntaxHighlighting(myTheme)
   ]
 });
 var state2 = EditorState.create({
   doc: `#woah, another code editor!
+"""
+Keyboard shortcuts I managed to implement cuz I'm cool:
+
+Alt + z: toggleable text-wrapping
+Tab: Indent/add spaces
+Shift + tab: un-indent
+
+Preddy cool eh?
+"""
 
 def binarySearch(givenList, target):
 
@@ -20557,12 +20584,24 @@ loops: {search['loops']}
         key: "Shift-Tab",
         run: indentLess
       },
+      {
+        key: "Alt-z",
+        run(view3) {
+          wrapping2 = !wrapping2;
+          view3.dispatch({
+            effects: wrapCompartment2.reconfigure(
+              wrapping2 ? EditorView.lineWrapping : []
+            )
+          });
+          return true;
+        }
+      },
       ...defaultKeymap,
       ...historyKeymap
     ]),
+    wrapCompartment2.of([]),
     indentUnit.of("    "),
     python(),
-    syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
     syntaxHighlighting(myTheme)
   ]
 });

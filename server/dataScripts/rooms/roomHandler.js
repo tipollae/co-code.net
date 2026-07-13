@@ -48,6 +48,14 @@ class roomHandler{
             }
         }
 
+        if (Object.keys(room.users).length + 1 > 10){
+            return{
+                success: false,
+                message: "This room is full.",
+                fixedRoomCode: givenRoomCode,
+            }
+        }
+
         return{
             success: true,
             message: "Valid room.",
