@@ -81,7 +81,15 @@ sys.stdout.flush()
         } 
         
         catch (err) {
-            self.postMessage({ type: "error", error: String(err) });
+            let errorMessage = String(err);
+
+            const userTracebackStart = errorMessage.indexOf('File "<exec>"');
+
+            if (userTracebackStart !== -1) {
+                errorMessage = errorMessage.slice(userTracebackStart);
+            }
+
+            self.postMessage({ type: "error", error: String(errorMessage) });
             self.postMessage({ type: "done" });
             currentLine = ""
         }
