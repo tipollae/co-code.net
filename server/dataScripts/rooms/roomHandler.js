@@ -1,7 +1,7 @@
 const crypto = require("crypto");
 const chars = "abcdefghjklmnpqrstuvwxyz23456789"; // avoids I, O, 0, 1, these characters look too similar.
 
-class roomHandler{
+class RoomHandler{
 
     constructor(){
         this.rooms = {};
@@ -214,4 +214,4 @@ class roomHandler{
 
 }
 
-module.exports = {roomHandler};
+module.exports = {RoomHandler};

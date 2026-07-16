@@ -151,13 +151,11 @@ print("hello world")`,
 const state2 = EditorState.create({
     doc: `#woah, another code editor!
 """
-Keyboard shortcuts I managed to implement cuz I'm cool:
+Keyboard shortcuts:
 
 Alt + z: toggleable text-wrapping
 Tab: Indent/add spaces
 Shift + tab: unindent
-
-Preddy cool eh?
 """
 
 def binarySearch(givenList, target):

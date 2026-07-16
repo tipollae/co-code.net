@@ -13,9 +13,9 @@
 const crypto = require("crypto");
 const milisecondConvertion = 3600000;
 
-class tokenHandler{
+class TokenHandler{
 
-    constructor (tokensLoopInterval, tokenExpiryTime){
+    constructor (tokenExpiryTime){
         this.tokens = {};
         this.usernames = {};
 
@@ -176,4 +176,4 @@ class tokenHandler{
     }
 }
 
-module.exports = {tokenHandler}
+module.exports = {TokenHandler}

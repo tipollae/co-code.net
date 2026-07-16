@@ -46,12 +46,12 @@ const characters = [
     "2", "3", "4", "5", "6", "7", "8", "9", "0"
 ];
 
-const { tokenHandler } = require("./dataScripts/tokens/tokenHandler");
-const serverTokenHandler = new tokenHandler(0.1, 0.5);
+const { TokenHandler } = require("./dataScripts/tokens/tokenHandler");
+const serverTokenHandler = new TokenHandler(0.5);
 const tokenEventsHandler = require("./dataScripts/tokens/tokenEventsHandler");
 
-const { roomHandler } = require("./dataScripts/rooms/roomHandler");
-const serverRoomHandler = new roomHandler();
+const { RoomHandler } = require("./dataScripts/rooms/roomHandler");
+const serverRoomHandler = new RoomHandler();
 const roomEventsHandler = require("./dataScripts/rooms/roomEventsHandler")
 
 //on connection tasks
